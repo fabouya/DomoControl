@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+
+<!DOCTYPE config [
+<!ELEMENT config (gpios*, switchs*)>
+
+<!ELEMENT gpios (gpio+)>
+
+<!ELEMENT gpio (#PCDATA)>
+<!ATTLIST gpio name CDATA #REQUIRED>
+<!ATTLIST gpio id CDATA #REQUIRED>
+
+<!ELEMENT switchs (switch*, inverseswitch*)>
+
+<!ELEMENT switch (#PCDATA)>
+<!ATTLIST switch name CDATA #REQUIRED>
+<!ATTLIST switch gpioname CDATA #REQUIRED>
+
+<!ELEMENT inverseswitch (#PCDATA)>
+<!ATTLIST inverseswitch name CDATA #REQUIRED>
+<!ATTLIST inverseswitch gpioname CDATA #REQUIRED>
+
+]>
+
+<config>
+
+<gpios>
+	<gpio name="pompegio" id="6" />
+	<gpio name="robotgio" id="8" />
+</gpios>
+
+<switchs>
+	<switch name="pompeswitch" gpioname="pompegpio"/>
+	<inverseswitch name="robotswitch" gpioname="robotpio"/>
+</switchs>
+
+</config>
