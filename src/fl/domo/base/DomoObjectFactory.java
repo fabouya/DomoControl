@@ -107,7 +107,8 @@ public class DomoObjectFactory
 		    Element gpio = (Element) gpios.item(j);
 
 		    _logger.debug("GPIO : " + gpio.getAttribute("name") + " : " + gpio.getAttribute("id"));
-
+		    
+		    new DomoGPIO(gpio.getAttribute("name"), Integer.parseInt(gpio.getAttribute("id")));
 		}
 		
 	}
