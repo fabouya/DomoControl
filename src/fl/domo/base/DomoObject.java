@@ -1,6 +1,8 @@
 package fl.domo.base;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
@@ -39,7 +41,39 @@ public class DomoObject
 	
 	public static DomoObject GetObjectByName(String name)
 	{
-		return _ht.get(name);
+		DomoObject o = _ht.get(name);
+		
+		_logger.debug("Recherche objet : " + name + ((null != o) ? " : trouvé" : " : pas trouvé !"));		
+		
+		return o;
+	}
+	
+	public static ArrayList<DomoObject> GetObjectsByClass(String classname)
+	{
+		ArrayList<DomoObject> l = new ArrayList<DomoObject>();
+		
+		Iterator<DomoObject> it = _ht.values().iterator();
+				
+		while ( it.hasNext()) 
+		{
+			Object o = (Object) it.next();
+
+			try 
+			{
+				if(Class.forName(classname).isInstance(o))
+				{
+					l.add((DomoObject) o);
+				}
+			} 
+			catch (ClassNotFoundException e) 
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} 
+		
+		
+		return l;
 	}
 
 }

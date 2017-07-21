@@ -56,6 +56,7 @@
 <switchs>
 	<switch name="pompeswitch" gpioname="pompegpio"/>
 	<inverseswitch name="robotswitch" gpioname="robotpio"/>
+	<inverseswitch name="lumiereswitch" gpioname="robotpio"/>
 </switchs>
 
 <calendars>
