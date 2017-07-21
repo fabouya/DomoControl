@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 
 <!DOCTYPE config [
-<!ELEMENT config (gpios*, switchs*)>
+<!ELEMENT config (gpios*, switchs*, calendars*, scheduledswitchs*)>
 
 <!ELEMENT gpios (gpio+)>
 
@@ -19,6 +19,31 @@
 <!ATTLIST inverseswitch name CDATA #REQUIRED>
 <!ATTLIST inverseswitch gpioname CDATA #REQUIRED>
 
+<!ELEMENT calendars (hourlycalendar*, dailycalendar*, weeklycalendar*, combinedcalendar*)>
+
+<!ELEMENT hourlycalendar (#PCDATA)>
+<!ATTLIST hourlycalendar name CDATA #REQUIRED>
+<!ATTLIST hourlycalendar hours CDATA #REQUIRED>
+
+<!ELEMENT dailycalendar (#PCDATA)>
+<!ATTLIST dailycalendar name CDATA #REQUIRED>
+<!ATTLIST dailycalendar days CDATA #REQUIRED>
+
+<!ELEMENT weeklycalendar (#PCDATA)>
+<!ATTLIST weeklycalendar name CDATA #REQUIRED>
+<!ATTLIST weeklycalendar weekdays CDATA #REQUIRED>
+
+<!ELEMENT combinedcalendar (#PCDATA)>
+<!ATTLIST combinedcalendar name CDATA #REQUIRED>
+<!ATTLIST combinedcalendar liste CDATA #REQUIRED>
+
+<!ELEMENT scheduledswitchs (scheduledswitch*)>
+
+<!ELEMENT scheduledswitch  (#PCDATA)>
+<!ATTLIST scheduledswitch name CDATA #REQUIRED>
+<!ATTLIST scheduledswitch switch CDATA #REQUIRED>
+<!ATTLIST scheduledswitch calendar CDATA #REQUIRED>
+
 ]>
 
 <config>
@@ -32,5 +57,17 @@
 	<switch name="pompeswitch" gpioname="pompegpio"/>
 	<inverseswitch name="robotswitch" gpioname="robotpio"/>
 </switchs>
+
+<calendars>
+<hourlycalendar name="pompecal" hours="7,8,9,10,11,12,13,14,15,16,17,18"/>
+<hourlycalendar name="robotcal" hours="8,9"/>
+<hourlycalendar name="lumierecal" hours="22,23,0"/>
+</calendars>
+
+<scheduledswitchs>
+<scheduledswitch name="pompe" switch="pompeswitch" calendar="pompecal"/>
+<scheduledswitch name="robot" switch="robotswitch" calendar="robotcal"/>
+<scheduledswitch name="lumiere" switch="lumiereswitch" calendar="lumierecal"/>
+</scheduledswitchs>
 
 </config>

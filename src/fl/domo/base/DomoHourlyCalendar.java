@@ -1,23 +1,53 @@
 package fl.domo.base;
 
-public class DomoHourlyCalendar implements DomoCalendar 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+import org.apache.log4j.Logger;
+
+public class DomoHourlyCalendar extends DomoCalendar 
 {
 	// -------------- members ----------------
-	
+
+	protected int _tabHeures[] = new int[24];
+
 	// ---------- static members -------------
-				
+
+	private static Logger _logger = Logger.getLogger(DomoHourlyCalendar.class);
+	
 	// -------------- function ----------------
 
-	public DomoHourlyCalendar() 
+	public DomoHourlyCalendar(String name) 
 	{
-		// TODO Auto-generated constructor stub
+		super(name);
 	}
 
-	@Override
+	public void SetPeriod(String period)
+	{
+		_logger.debug("Addperiod " + period);
+		// periode de la forme "h1, h2, h3, ..."
+		String[] parts = period.split(",");
+		
+		for(int i=0; i < parts.length; i++)
+		{
+			int h = Integer.parseInt(parts[i]);
+			if((h >-1) && (h<24))
+			{
+				_tabHeures[h] = 1;
+			}
+			else
+			{
+				_logger.error("Heure invalide " + h);				
+			}
+		}
+	}
+	
 	public boolean IsActive() 
 	{
-		// TODO Auto-generated method stub
-		return false;
+		String h = new SimpleDateFormat("HH", Locale.FRANCE).format(new Date());
+
+		return (_tabHeures[Integer.parseInt(h)] == 1 ? true : false);
 	}
 
 	// ---------- static function -------------

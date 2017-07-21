@@ -28,6 +28,12 @@ public class DomoSwitch extends DomoObject
 		_state = 0;
 	}
 	
+	public boolean IsON()
+	{
+		return (1 == _state) ? true : false;
+	}
+	
+	
 	public int GetState()
 	{
 		// read gpio

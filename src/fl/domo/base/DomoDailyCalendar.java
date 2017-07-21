@@ -1,6 +1,6 @@
 package fl.domo.base;
 
-public class DomoDailyCalendar implements DomoCalendar 
+public class DomoDailyCalendar extends DomoCalendar 
 {
 
 	// -------------- members ----------------
@@ -9,12 +9,17 @@ public class DomoDailyCalendar implements DomoCalendar
 				
 	// -------------- function ----------------
 
-	public DomoDailyCalendar() 
+	public DomoDailyCalendar(String name) 
 	{
 		// TODO Auto-generated constructor stub
+		super(name);
 	}
 
-	@Override
+	public void SetPeriod(String period)
+	{
+		
+	}
+	
 	public boolean IsActive() 
 	{
 		// TODO Auto-generated method stub

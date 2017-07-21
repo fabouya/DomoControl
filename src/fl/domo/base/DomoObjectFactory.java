@@ -20,10 +20,10 @@ public class DomoObjectFactory
 
 	private final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 	
-	protected final static Logger _logger = Logger.getLogger(DomoObjectFactory.class);
-	
 	// ---------- static members -------------
 				
+	protected final static Logger _logger = Logger.getLogger(DomoObjectFactory.class);
+	
 	// -------------- function ----------------
 
 	public DomoObjectFactory() 
@@ -76,6 +76,18 @@ public class DomoObjectFactory
 		    			case "switchs":
 		    			{
 		    				ParseSWITCHS((Element) racineNoeuds.item(i));
+		    			}
+		    			break;
+		    			
+		    			case "calendars":
+		    			{
+		    				ParseCalendars((Element) racineNoeuds.item(i));
+		    			}
+		    			break;
+		    						    			
+		    			case "scheduledswitchs":
+		    			{
+		    				ParseScheduledSwitch((Element) racineNoeuds.item(i));
 		    			}
 		    			break;
 		    			
@@ -143,6 +155,44 @@ public class DomoObjectFactory
 		}
 		
 	}
+
+	protected void ParseCalendars(Element item)
+	{
+
+		NodeList cals = item.getElementsByTagName("hourlycalendar");
+
+		int nbcal = cals.getLength();		                    
+
+		for(int j = 0; j<nbcal; j++) 
+		{
+		    Element cal = (Element) cals.item(j);
+
+		    _logger.debug("CAL : " + cal.getAttribute("name") + " : " + cal.getAttribute("hours"));
+		    
+		    DomoHourlyCalendar c = new DomoHourlyCalendar(cal.getAttribute("name"));
+		    c.SetPeriod(cal.getAttribute("hours"));
+		}
+		
+	}
+	
+	protected void ParseScheduledSwitch(Element item)
+	{
+
+		NodeList switchs = item.getElementsByTagName("scheduledswitch");
+
+		int nbsw = switchs.getLength();		                    
+
+		for(int j = 0; j<nbsw; j++) 
+		{
+		    Element sw = (Element) switchs.item(j);
+
+		    _logger.debug("Scheduled Switch : " + sw.getAttribute("name") + " : " + sw.getAttribute("calendar") + ":" + sw.getAttribute("switch"));
+		    
+		    new ScheduledSwitch(sw.getAttribute("name"), sw.getAttribute("calendar"), sw.getAttribute("switch"));
+		}
+		
+	}
+	
 	
 	// ---------- static function -------------
 }
