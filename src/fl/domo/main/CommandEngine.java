@@ -8,7 +8,7 @@ import org.json.simple.parser.JSONParser;
 import fl.domo.base.DomoObject;
 import fl.domo.tools.Global;
 
-public class CommandEngine 
+public class CommandEngine
 {
 	// -------------- members ----------------
 		
