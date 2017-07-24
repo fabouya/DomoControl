@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 
 import fl.domo.base.DomoObject;
 import fl.domo.base.DomoObjectFactory;
+import fl.domo.threads.SchedulerThread;
 import fl.domo.tools.Global;
 
 public class DomoBrain 
@@ -70,19 +71,23 @@ public class DomoBrain
 //3
 		// lancer les threads de serveurs
 		// Scheduling thread
+		SchedulerThread scheduler = new SchedulerThread("Scheduler"); 
 		// TCPServer thread
 		// JMS Server thread
 		
+		scheduler.start();
+		
 //4
 		// entrer dans la boucle principale
-		
-		
-		ArrayList<DomoObject> liste = DomoObject.GetObjectsByClass("fl.domo.base.DomoSwitch");
-		
-		for (DomoObject o : liste) 
-		{
-			System.out.println("Switch : " + o.GetName());
+		while (false == Global._quitFlag) {
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
+		
 	}
 
 }

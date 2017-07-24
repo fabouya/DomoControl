@@ -3,9 +3,7 @@ package fl.domo.threads;
 import org.apache.log4j.Logger;
 
 import fl.domo.base.DomoThread;
-import fl.pi.pool.common.Global;
-import fl.pi.pool.common.PoolJMSConsumer;
-
+import fl.domo.tools.Global;
 
 public class TcpServerThread extends DomoThread 
 {
@@ -22,6 +20,7 @@ public class TcpServerThread extends DomoThread
 	{
 
 		try {
+			
 			_logger.info("Starting TcpServerThread " + _name);
 			
 	        

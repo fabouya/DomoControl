@@ -27,11 +27,13 @@ public class ScheduledSwitch extends DomoScheduledObject
 	{
 		// TODO Auto-generated method stub
 
+		_logger.debug("Object : " + _name + " starting step");
+		
 		if(GetCalendarObject().IsActive())
 		{
 			if(! _switchObject.IsON())
 			{
-				_logger.debug("Activation " + _name);
+				_logger.debug("Activation switch " + _name);
 				_switchObject.SwitchON();
 			}
 		}
@@ -39,10 +41,12 @@ public class ScheduledSwitch extends DomoScheduledObject
 		{
 			if(_switchObject.IsON())
 			{
-				_logger.debug("Désactivation " + _name);
+				_logger.debug("Désactivation switch " + _name);
 				_switchObject.SwitchOFF();
 			}
 		}
+		
+		_logger.debug("Object : " + _name + " ending step");
 	}
 
 }
