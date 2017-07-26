@@ -23,10 +23,10 @@ public class DomoObject
 	public DomoObject(String name)
 	{
 		_logger.debug("Creation : " + name);
-		_name = name;
-		if(null == _ht.get(name))
+		_name = name.toLowerCase();
+		if(null == _ht.get(_name))
 		{
-			_ht.put(name,  this);
+			_ht.put(_name,  this);
 			_counter++;
 		}
 		else
@@ -41,7 +41,7 @@ public class DomoObject
 	
 	public static DomoObject GetObjectByName(String name)
 	{
-		DomoObject o = _ht.get(name);
+		DomoObject o = _ht.get(name.toLowerCase());
 		
 		_logger.debug("Recherche objet : " + name + ((null != o) ? " : trouvé" : " : pas trouvé !"));		
 		

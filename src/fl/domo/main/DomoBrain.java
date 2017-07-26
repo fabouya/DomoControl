@@ -12,6 +12,7 @@ import fl.domo.base.DomoObject;
 import fl.domo.base.DomoObjectFactory;
 import fl.domo.threads.JmsServerThread;
 import fl.domo.threads.SchedulerThread;
+import fl.domo.threads.TcpServerThread;
 import fl.domo.tools.Global;
 
 public class DomoBrain 
@@ -36,6 +37,9 @@ public class DomoBrain
 			// get the property value and print it out
 			Global._xmlFile = prop.getProperty("config");
 			Global._tcpPort = Integer.parseInt(prop.getProperty("tcpserverport"));
+			Global._jmsProvider = prop.getProperty("_jmsProvider");
+			Global._commandQueueName = prop.getProperty("commandQueueName");
+			Global._scheduleSleep = Integer.parseInt(prop.getProperty("schedulerSleep"));
 			
 
 		} 
@@ -62,6 +66,7 @@ public class DomoBrain
 
 //1
 		// Lire les properties
+		ReadProperties("domo.properties");
 		
 //2
 		// Lire de fichier xml de declaration des objets
@@ -75,12 +80,14 @@ public class DomoBrain
 		SchedulerThread scheduler = new SchedulerThread("Scheduler"); 
 		
 		// TCPServer thread
+		TcpServerThread tcpserver = new TcpServerThread("TcpServerThread");
 		
 		// JMS Server thread
 		JmsServerThread jms = new JmsServerThread("JMSServer");
 				
-		scheduler.start();
-		jms.start();
+		//scheduler.start();
+		tcpserver.start();
+		//jms.start();
 		
 //4
 		// entrer dans la boucle principale

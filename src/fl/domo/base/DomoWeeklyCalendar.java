@@ -22,6 +22,7 @@ public class DomoWeeklyCalendar extends DomoCalendar
 		super(name);
 	}
 
+	@Override
 	public void SetPeriod(String period)
 	{
 		_logger.debug("Addperiod " + period);
@@ -43,13 +44,19 @@ public class DomoWeeklyCalendar extends DomoCalendar
 		}
 	}
 
-	
+	@Override
 	public boolean IsActive() 
 	{
 		// TODO Auto-generated method stub
 		String h = new SimpleDateFormat("u", Locale.FRANCE).format(new Date());
 
 		return (_tabJourSemaine[Integer.parseInt(h)] == 1 ? true : false);
+	}
+
+	@Override
+	public void Reload() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

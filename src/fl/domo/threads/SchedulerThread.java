@@ -36,9 +36,9 @@ public class SchedulerThread extends DomoThread
 				{
 					((DomoScheduledObject) item).Step();
 				}
+
+				sleep(Global._scheduleSleep);				
 			}
-			
-			Thread.sleep(Global._scheduleSleep);
 			
 		} 
 		catch (Exception e) 

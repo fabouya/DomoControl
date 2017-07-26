@@ -26,4 +26,10 @@ public class DomoCombinedCalendar extends DomoCalendar
 		return false;
 	}
 
+	@Override
+	public void Reload() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -30,6 +30,7 @@ public class JMSConsumer implements MessageListener
 	public JMSConsumer() 
 	{
 		// TODO Auto-generated constructor stub
+		_logger.debug("Create JMSConsumer");
 	}
 	
 

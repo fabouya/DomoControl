@@ -27,7 +27,7 @@ public class DomoInversedSwitch extends DomoSwitch {
 	public int GetState()
 	{
 		// read gpio
-		return ( GetState() == 0) ? 1 : 0;
+		return ( super.GetState() == 0) ? 1 : 0;
 	}
 	
 }

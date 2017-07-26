@@ -37,17 +37,17 @@ public class SimpleCommandEngine
 		// GET [ROBOT|POMPE|LUMIERE|STATUS|ALLMODE]
 
 		command = Tools.chop(command);
-
+		
 		_logger.info("Command to parse : <" + command + ">");
 
-		if (command.equals("QUIT")) 
+		if (command.equals("quit")) 
 		{
 			_logger.info("Quit command");
 			Global._quitFlag = true;
 			return _ok;
 		}
 
-		if (command.equals("RELOAD")) 
+		if (command.equals("reload")) 
 		{
 			_logger.info("RELOAD command");
 			return _ok;
@@ -55,12 +55,12 @@ public class SimpleCommandEngine
 
 //------------------------ COMMANDE SET -------------------------------------
 		
-		Pattern pat = Pattern.compile("^SET +(.+) +(.+) *");
+		Pattern pat = Pattern.compile("^set +(.+) +(.+) *");
 		Matcher matcher = pat.matcher(command);
 
 		if (matcher.matches()) 
 		{
-			_logger.info("SET command");
+			_logger.info("set command");
 			
 			// SET [ROBOT|POMPE|LUMIERE] [AUTO|FORCEDON|FORCEDOFF]
 			String[] items = command.split(" +");
@@ -69,7 +69,7 @@ public class SimpleCommandEngine
 
 			if (null == o) 
 			{
-				_logger.error("SET to unknown target : <" + items[1] + ">");
+				_logger.error("set to unknown target : <" + items[1] + ">");
 				return _error;
 			}
 			
@@ -79,7 +79,7 @@ public class SimpleCommandEngine
 			}
 			else
 			{
-				_logger.error("SET to bad class target : <" + items[1] + ">");
+				_logger.error("set to bad class target : <" + items[1] + ">");
 				return _error;				
 			}
 
@@ -88,12 +88,12 @@ public class SimpleCommandEngine
 //------------------------ COMMANDE GET -------------------------------------
 		
 		// pat = Pattern.compile("^GET +(.+) +(.+) *");
-		pat = Pattern.compile("^GET +(.+) *");
+		pat = Pattern.compile("^get +(.+) *");
 		matcher = pat.matcher(command);
 
 		if (matcher.matches()) 
 		{
-			_logger.info("GET command");
+			_logger.info("get command");
 			String[] items = command.split(" +");
 
 			_logger.debug("items 0 : " + items[0]);

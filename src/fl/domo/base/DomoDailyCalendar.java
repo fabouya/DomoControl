@@ -15,15 +15,23 @@ public class DomoDailyCalendar extends DomoCalendar
 		super(name);
 	}
 
+	@Override
 	public void SetPeriod(String period)
 	{
 		
 	}
 	
+	@Override
 	public boolean IsActive() 
 	{
 		// TODO Auto-generated method stub
 		return false;
 	}
 	// ---------- static function -------------
+
+	@Override
+	public void Reload() {
+		// TODO Auto-generated method stub
+		
+	}
 }

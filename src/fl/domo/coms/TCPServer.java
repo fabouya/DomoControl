@@ -41,27 +41,41 @@ public class TCPServer
 
 		_logger.info("Running TCP server on " + _portNumber);
 		
+		
 		while (false == Global._quitFlag) 
 		{
 			Socket connectionSocket = welcomeSocket.accept();
-
 			BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
-
 			DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
-
+			
+			_logger.debug("Reading from client");
+					
 			clientSentence = inFromClient.readLine();
 
 			_logger.debug("Received: " + clientSentence);
 			
-			capitalizedSentence = clientSentence.toUpperCase() + '\n';
+			capitalizedSentence = clientSentence.toLowerCase();
+			
+			if(! clientSentence.endsWith("\n"))
+			{
+				capitalizedSentence += '\n';
+			}
 
 			if (null != _engine) 
 			{
 				String result = _engine.RunCommand(capitalizedSentence);
 				outToClient.writeBytes(result + '\n');
 			}
+			
+			inFromClient.close();
+			outToClient.close();
+			connectionSocket.close();			
 
 		}
+		
+		_logger.info("Exit TCP Server");
+		welcomeSocket.close();
+
 	}
 
 	
