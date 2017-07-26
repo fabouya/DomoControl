@@ -46,33 +46,21 @@ public class DomoSwitch extends DomoObject
 		return _state;
 	}
 
-	public void SetMode(String s)
+	public String SetMode(String s)
 	{
 		_logger.debug("Set Mode <" + s + "> pour " + _name);
 		
-		switch(s.toLowerCase())
-		{
-			case "auto":
-			{
-				_mode = 0;
-			}
-			break;
-			
-			case "forcedon":
-			{
-				_mode = 1;
-			}
-			break;
-				
-			case "forcedoff":
-			{
-				_mode = 2;
-			}
-			break;
-			
-			default:
+		int mode = StringToMode(s);
+		
+		if(-1 == mode)
+		{		
 				_logger.error("Mode inconnu <" + s + "> pour " + _name);
+				return "ERROR";
 		}
+		
+		_mode = mode;
+		
+		return "OK";
 	}
 	
 	public void SetModeAuto() { _mode = 0; }

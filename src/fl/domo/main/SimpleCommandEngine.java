@@ -1,17 +1,24 @@
 package fl.domo.main;
 
+
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
+import org.json.simple.JSONObject;
 
 import fl.domo.base.DomoObject;
+import fl.domo.base.DomoSwitch;
 import fl.domo.tools.Global;
 import fl.domo.tools.Tools;
 
 public class SimpleCommandEngine 
 {
 	private static Logger _logger = Logger.getLogger(SimpleCommandEngine.class);
+	
+	private static final String _error = "ERROR";
+	private static final String _ok = "OK";
 
 	public SimpleCommandEngine() 
 	{
@@ -25,7 +32,7 @@ public class SimpleCommandEngine
 	{
 		// commandes :
 		// QUIT
-		// SET [ROBOT|POMPE] [AUTO|FORCEDON|FORCEDOFF]
+		// SET <objectname> [AUTO|FORCEDON|FORCEDOFF]
 		// RELOAD
 		// GET [ROBOT|POMPE|LUMIERE|STATUS|ALLMODE]
 
@@ -37,15 +44,17 @@ public class SimpleCommandEngine
 		{
 			_logger.info("Quit command");
 			Global._quitFlag = true;
-			return "QUIT";
+			return _ok;
 		}
 
 		if (command.equals("RELOAD")) 
 		{
 			_logger.info("RELOAD command");
-			return "RELOAD OK";
+			return _ok;
 		}
 
+//------------------------ COMMANDE SET -------------------------------------
+		
 		Pattern pat = Pattern.compile("^SET +(.+) +(.+) *");
 		Matcher matcher = pat.matcher(command);
 
@@ -55,51 +64,29 @@ public class SimpleCommandEngine
 			
 			// SET [ROBOT|POMPE|LUMIERE] [AUTO|FORCEDON|FORCEDOFF]
 			String[] items = command.split(" +");
+			
+			DomoObject o = DomoObject.GetObjectByName(items[1]);
 
-/*			
-			if (items[1].equals("ROBOT")) {
-				target = Global._RobotGPIO;
-			}
-
-			if (items[1].equals("POMPE")) {
-				target = Global._PumpGPIO;
-			}
-
-			if (items[1].equals("LUMIERE")) {
-				target = Global._LumiereGPIO;
-			}
-
-			if (null == target) 
+			if (null == o) 
 			{
-				_logger.info("SET to unknown target : <" + items[1] + ">");
-				return "ERROR";
+				_logger.error("SET to unknown target : <" + items[1] + ">");
+				return _error;
 			}
-*/
-
-/*			
-			if (items[2].matches("AUTO")) {
-				_logger.info("SET " + target._name + " to auto mode");
-				target.SetModeAuto();
-				return target._name + " SET to auto mode";
+			
+			if(o instanceof fl.domo.base.DomoSwitch)
+			{
+				return ((fl.domo.base.DomoSwitch) o).SetMode(items[2]);
 			}
-
-			if (items[2].matches("FORCEDON")) {
-				_logger.info("SET " + target._name + " to ON mode");
-				target.SetModeForcedON();
-				return target._name + " SET to ON mode";
+			else
+			{
+				_logger.error("SET to bad class target : <" + items[1] + ">");
+				return _error;				
 			}
 
-			if (items[2].matches("FORCEDOFF")) {
-				_logger.info("SET " + target._name + " to OFF mode");
-				target.SetModeForcedOFF();
-				return target._name + " SET to OFF mode";
-			}
-
-			_logger.info("unknown mode");
-*/			
-			return "ERROR";
 		}
 
+//------------------------ COMMANDE GET -------------------------------------
+		
 		// pat = Pattern.compile("^GET +(.+) +(.+) *");
 		pat = Pattern.compile("^GET +(.+) *");
 		matcher = pat.matcher(command);
@@ -112,58 +99,95 @@ public class SimpleCommandEngine
 			_logger.debug("items 0 : " + items[0]);
 			_logger.debug("items 1 : " + items[1]);
 			
-			DomoObject o = DomoObject.GetObjectByName(items[1]);
-
-/*			
-			if (items[1].equals("STATUS")) 
+			if(items[0].toLowerCase().equals("ALL"))
 			{
-				_logger.info("GET STATUS");           
+				ArrayList<DomoObject> objs = DomoObject.GetObjectsByClass("fl.domo.base.DomoSwitch");
 				
-		        JSONObject obj = new JSONObject();
-		        obj.put("TAG", "STATUS");
-		        obj.put("STATUS", "OK");
-		        
-		        obj.put("POMPE", String.valueOf(Global._PumpGPIO.IsActivated()));
-		        obj.put("ROBOT", String.valueOf(Global._RobotGPIO.IsActivated()));
-		        obj.put("LUMIERE", String.valueOf(Global._LumiereGPIO.IsActivated()));
-		        
-		        
-		        String s = obj.toJSONString();
-		        
-		        _logger.info("Return " + s);
+				if(null == objs)
+				{
+					_logger.error("aucun switch referencé");
+					return _error;					
+				}
+				
+				if(items[1].toLowerCase().equals("mode"))
+				{
+			        JSONObject json = new JSONObject();
+			        json.put("TAG", "MODE");
+			        json.put("STATUS", "OK");
 
-				return s;
+			        for(DomoObject o : objs)
+					{
+						String mode = String.valueOf(((DomoSwitch) o).GetMode());
+						json.put(o.GetName(), mode);
+					}
+					return json.toJSONString();
+				}
+				else
+					if(items[1].toLowerCase().equals("status"))
+					{
+				        JSONObject json = new JSONObject();
+				        json.put("TAG", "STATUS");
+				        json.put("STATUS", "OK");
+				        
+						for(DomoObject o : objs)
+						{
+							String state = String.valueOf(((DomoSwitch) o).GetState());
+							json.put(o.GetName(), state);
+						}
+						
+						return json.toJSONString();
+					}
+					else
+					{
+						_logger.error("commande GET inconnue : " + items[0] + " " + items[1]);
+						return _error;
+					}
+					
 			}
 			
-			if (items[1].equals("ALLMODE")) 
+			DomoObject o = DomoObject.GetObjectByName(items[0]);
+			
+			if(null == o)
 			{
-				_logger.info("GET ALLMODE");
+				_logger.error("objet inconnu: " + items[0]);
+				return _error;
 				
-		        JSONObject obj = new JSONObject();
-		        obj.put("TAG", "STATUS");
-		        obj.put("STATUS", "OK");
-
-		        obj.put("POMPE", String.valueOf(Global._PumpGPIO.GetMode()));
-		        obj.put("ROBOT", String.valueOf(Global._RobotGPIO.GetMode()));
-		        obj.put("LUMIERE", String.valueOf(Global._LumiereGPIO.GetMode()));
-		        
-		        String s = obj.toJSONString(); 
-		        _logger.info("Return " + s);
-
-				return s;
 			}
 			
-	
-			if (null == target) {
-				_logger.info("GET unknown target : <" + items[1] + ">");
-				return "ERROR";
+			if(items[1].toLowerCase().equals("mode"))
+			{
+		        JSONObject json = new JSONObject();
+		        json.put("TAG", "MODE");
+		        json.put("STATUS", "OK");
+		        
+				String mode = String.valueOf(((DomoSwitch) o).GetMode());
+				json.put(o.GetName(), mode);
+		     
+				return json.toJSONString();
 			}
-
-			return String.valueOf(target.GetMode());
-*/			
+			else
+				if(items[1].toLowerCase().equals("status"))
+				{
+			        JSONObject json = new JSONObject();
+			        json.put("TAG", "STATUS");
+			        json.put("STATUS", "OK");
+			        
+					String state = String.valueOf(((DomoSwitch) o).GetState());
+					json.put(o.GetName(), state);
+					
+					return json.toJSONString();
+					
+				}
+				else
+				{
+					_logger.error("commande GET inconnue : " + items[0] + " " + items[1]);
+					return _error;
+				}
+			
 		}
 
-		return "ERROR";
+		_logger.error("commande inconnue : " + command);
+		return _error;
 	}
 	
 
