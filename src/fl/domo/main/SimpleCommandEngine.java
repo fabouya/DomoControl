@@ -88,7 +88,7 @@ public class SimpleCommandEngine
 //------------------------ COMMANDE GET -------------------------------------
 		
 		// pat = Pattern.compile("^GET +(.+) +(.+) *");
-		pat = Pattern.compile("^get +(.+) *");
+		pat = Pattern.compile("^get +(.+) +(.+) *");
 		matcher = pat.matcher(command);
 
 		if (matcher.matches()) 
@@ -96,10 +96,11 @@ public class SimpleCommandEngine
 			_logger.info("get command");
 			String[] items = command.split(" +");
 
-			_logger.debug("items 0 : " + items[0]);
-			_logger.debug("items 1 : " + items[1]);
+			_logger.debug("items 0 : <" + items[0] + ">");
+			_logger.debug("items 1 : <" + items[1] + ">");
+			_logger.debug("items 2 : <" + items[2] + ">");
 			
-			if(items[0].toLowerCase().equals("ALL"))
+			if(items[1].toLowerCase().equals("all"))
 			{
 				ArrayList<DomoObject> objs = DomoObject.GetObjectsByClass("fl.domo.base.DomoSwitch");
 				
@@ -109,7 +110,7 @@ public class SimpleCommandEngine
 					return _error;					
 				}
 				
-				if(items[1].toLowerCase().equals("mode"))
+				if(items[2].toLowerCase().equals("mode"))
 				{
 			        JSONObject json = new JSONObject();
 			        json.put("TAG", "MODE");
@@ -123,7 +124,7 @@ public class SimpleCommandEngine
 					return json.toJSONString();
 				}
 				else
-					if(items[1].toLowerCase().equals("status"))
+					if(items[2].toLowerCase().equals("status"))
 					{
 				        JSONObject json = new JSONObject();
 				        json.put("TAG", "STATUS");

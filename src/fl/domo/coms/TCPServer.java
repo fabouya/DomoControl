@@ -38,6 +38,7 @@ public class TCPServer
 		
 		@SuppressWarnings("resource")
 		ServerSocket welcomeSocket = new ServerSocket(_portNumber);
+		
 
 		_logger.info("Running TCP server on " + _portNumber);
 		
@@ -45,6 +46,7 @@ public class TCPServer
 		while (false == Global._quitFlag) 
 		{
 			Socket connectionSocket = welcomeSocket.accept();
+			connectionSocket.setTcpNoDelay(true);
 			BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
 			DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
 			
