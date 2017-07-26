@@ -8,6 +8,7 @@ import java.net.Socket;
 
 import org.apache.log4j.Logger;
 
+import fl.domo.main.SimpleCommandEngine;
 import fl.domo.tools.Global;
 
 public class TCPServer 
@@ -15,6 +16,7 @@ public class TCPServer
 	// -------------- members ----------------
 
 	protected int _portNumber = 5832;
+	protected SimpleCommandEngine _engine = null;
 	
 	// ---------- static members -------------
 
@@ -32,11 +34,12 @@ public class TCPServer
 	{
 		String clientSentence;
 		String capitalizedSentence;
+		_engine = new SimpleCommandEngine();
 		
 		@SuppressWarnings("resource")
 		ServerSocket welcomeSocket = new ServerSocket(_portNumber);
 
-		_logger.info("Running server on " + _portNumber);
+		_logger.info("Running TCP server on " + _portNumber);
 		
 		while (false == Global._quitFlag) 
 		{
@@ -48,19 +51,16 @@ public class TCPServer
 
 			clientSentence = inFromClient.readLine();
 
-			// System.out.println("Received: " + clientSentence);
 			_logger.debug("Received: " + clientSentence);
 			
 			capitalizedSentence = clientSentence.toUpperCase() + '\n';
 
-			// outToClient.writeBytes(capitalizedSentence);
-
-/*
-			if (null != _engine) {
+			if (null != _engine) 
+			{
 				String result = _engine.RunCommand(capitalizedSentence);
 				outToClient.writeBytes(result + '\n');
 			}
-*/
+
 		}
 	}
 

@@ -6,6 +6,12 @@ public class DomoSwitch extends DomoObject
 	
 	protected		int		_state=-1;	// -1 = undef, 0 = off, 1 = on
 	protected		String	_gpioName = "undef";
+	
+	protected		int		_mode = 0;
+
+	// 0 = normal/auto
+	// 1 = forced on
+	// 2 = forced off
 		
 	// ---------- static members -------------
 				
@@ -30,7 +36,7 @@ public class DomoSwitch extends DomoObject
 	
 	public boolean IsON()
 	{
-		return (1 == _state) ? true : false;
+		return (1 == GetState()) ? true : false;
 	}
 	
 	
@@ -39,7 +45,71 @@ public class DomoSwitch extends DomoObject
 		// read gpio
 		return _state;
 	}
+
+	public void SetMode(String s)
+	{
+		_logger.debug("Set Mode <" + s + "> pour " + _name);
+		
+		switch(s.toLowerCase())
+		{
+			case "auto":
+			{
+				_mode = 0;
+			}
+			break;
+			
+			case "forcedon":
+			{
+				_mode = 1;
+			}
+			break;
+				
+			case "forcedoff":
+			{
+				_mode = 2;
+			}
+			break;
+			
+			default:
+				_logger.error("Mode inconnu <" + s + "> pour " + _name);
+		}
+	}
 	
+	public void SetModeAuto() { _mode = 0; }
+	public void SetModeForcedON() { _mode = 1; }
+	public void SetModeForcedOFF() { _mode = 2; }
+	
+	public int GetMode()
+	{
+		return _mode;
+	}
+	
+	public String ModeToString(int mode)
+	{
+		switch(mode)
+		{
+			case 0: return "auto";
+			case 1: return "forcedon";
+			case 2: return "forcedoff";
+			default : return "undef";
+		}
+	}
+
+	public int StringToMode(String s)
+	{
+		switch(s.toLowerCase())
+		{
+			case "auto": { return 0;}
+			case "forcedon": { return 1; }			
+			case "forcedoff": { return 2; }
+			default:
+			{
+				_logger.error("Mode inconnu <" + s + "> pour " + _name);
+				return -1;
+			}
+		}
+		
+	}
 	// ---------- static function -------------
 
 

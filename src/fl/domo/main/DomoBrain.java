@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 
 import fl.domo.base.DomoObject;
 import fl.domo.base.DomoObjectFactory;
+import fl.domo.threads.JmsServerThread;
 import fl.domo.threads.SchedulerThread;
 import fl.domo.tools.Global;
 
@@ -72,10 +73,14 @@ public class DomoBrain
 		// lancer les threads de serveurs
 		// Scheduling thread
 		SchedulerThread scheduler = new SchedulerThread("Scheduler"); 
-		// TCPServer thread
-		// JMS Server thread
 		
+		// TCPServer thread
+		
+		// JMS Server thread
+		JmsServerThread jms = new JmsServerThread("JMSServer");
+				
 		scheduler.start();
+		jms.start();
 		
 //4
 		// entrer dans la boucle principale

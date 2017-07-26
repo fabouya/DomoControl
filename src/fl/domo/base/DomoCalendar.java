@@ -11,4 +11,5 @@ public abstract class DomoCalendar extends DomoObject
 	abstract public void SetPeriod(String period);
 
 	abstract public boolean IsActive();
+	abstract public void Reload();
 }

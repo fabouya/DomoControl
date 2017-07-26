@@ -3,11 +3,15 @@ package fl.domo.threads;
 import org.apache.log4j.Logger;
 
 import fl.domo.base.DomoThread;
+import fl.domo.coms.JMSConsumer;
+import fl.domo.tools.Global;
 
 public class JmsServerThread extends DomoThread 
 {
 
 	private static Logger _logger = Logger.getLogger(JmsServerThread.class);
+	
+	private JMSConsumer		_jmsConsumer=null;
 			
 	public JmsServerThread(String name) 
 	{
@@ -21,8 +25,8 @@ public class JmsServerThread extends DomoThread
 		try {
 			_logger.info("Starting SchedulerThread " + _name);
 
-			/*
-			_jmsConsumer = new PoolJMSConsumer();
+			
+			_jmsConsumer = new JMSConsumer();
 			
 			_jmsConsumer.Server();
 			
@@ -35,7 +39,7 @@ public class JmsServerThread extends DomoThread
 					e.printStackTrace();
 				}	
 			}
-	        */
+	        
 		} 
 		catch (Exception e) 
 		{

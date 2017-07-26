@@ -75,5 +75,10 @@ public class DomoObject
 		
 		return l;
 	}
+	
+	public String RunCommand(String s)
+	{
+		return "RunCommand undef for " + _name;
+	}
 
 }

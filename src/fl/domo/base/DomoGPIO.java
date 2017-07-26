@@ -5,6 +5,7 @@ public class DomoGPIO extends DomoObject
 	// -------------- members ----------------
 	
 	protected 	int		_pinNumber;	//wiredPi numerotation
+	// pi4j gpio controler
 		
 	// ---------- static members -------------
 				
@@ -16,6 +17,30 @@ public class DomoGPIO extends DomoObject
 			_pinNumber = pinNum;
 		}
 		
+		public void SetHigh()
+		{
+			
+		}
+		
+		public void SetLow()
+		{
+			
+		}
+		
+		public void Toggle()
+		{
+			
+		}
+		
+		public void SetOutputMode()
+		{
+			
+		}
+		
+		public void SetInputMode()
+		{
+				
+		}
 	// ---------- static function -------------
 		
 }
