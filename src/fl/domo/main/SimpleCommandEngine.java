@@ -30,11 +30,6 @@ public class SimpleCommandEngine
 	
 	public synchronized String RunCommand(String command)
 	{
-		// commandes :
-		// QUIT
-		// SET <objectname> [AUTO|FORCEDON|FORCEDOFF]
-		// RELOAD
-		// GET [ROBOT|POMPE|LUMIERE|STATUS|ALLMODE]
 
 		command = Tools.chop(command);
 		
@@ -47,6 +42,8 @@ public class SimpleCommandEngine
 			return _ok;
 		}
 
+//------------------------ COMMANDE RELOAD -------------------------------------
+		
 		if (command.equals("reload")) 
 		{
 			_logger.info("RELOAD command");
