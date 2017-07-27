@@ -49,7 +49,7 @@ public class CommandEngine
 	
 	// ------------- Decodeur -----------------
 	
-	public String RunCommand(String jsonCommand)
+	public synchronized String RunCommand(String jsonCommand)
 	{
 		JSONObject jsonobj = null;
 		

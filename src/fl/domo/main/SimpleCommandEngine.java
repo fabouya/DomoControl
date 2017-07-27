@@ -28,7 +28,7 @@ public class SimpleCommandEngine
 		
 	}
 	
-	public String RunCommand(String command)
+	public synchronized String RunCommand(String command)
 	{
 		// commandes :
 		// QUIT
@@ -146,7 +146,7 @@ public class SimpleCommandEngine
 					
 			}
 			
-			DomoObject o = DomoObject.GetObjectByName(items[0]);
+			DomoObject o = DomoObject.GetObjectByName(items[1]);
 			
 			if(null == o)
 			{
@@ -155,7 +155,13 @@ public class SimpleCommandEngine
 				
 			}
 			
-			if(items[1].toLowerCase().equals("mode"))
+			if(! (o instanceof fl.domo.base.DomoSwitch))
+			{
+				_logger.error("objet " + items[1] + "n'est pas un switch");
+				return _error;				
+			}
+			
+			if(items[2].toLowerCase().equals("mode"))
 			{
 		        JSONObject json = new JSONObject();
 		        json.put("TAG", "MODE");
@@ -167,7 +173,7 @@ public class SimpleCommandEngine
 				return json.toJSONString();
 			}
 			else
-				if(items[1].toLowerCase().equals("status"))
+				if(items[2].toLowerCase().equals("status"))
 				{
 			        JSONObject json = new JSONObject();
 			        json.put("TAG", "STATUS");

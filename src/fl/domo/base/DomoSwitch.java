@@ -1,11 +1,14 @@
 package fl.domo.base;
 
+import org.apache.log4j.Logger;
+
 public class DomoSwitch extends DomoObject
 {
 	// -------------- members ----------------
 	
-	protected		int		_state=-1;	// -1 = undef, 0 = off, 1 = on
-	protected		String	_gpioName = "undef";
+	protected		int			_state=-1;	// -1 = undef, 0 = off, 1 = on
+	protected		String		_gpioName = "undef";
+	protected		DomoGPIO	_gpio = null;
 	
 	protected		int		_mode = 0;
 
@@ -14,29 +17,38 @@ public class DomoSwitch extends DomoObject
 	// 2 = forced off
 		
 	// ---------- static members -------------
+	protected final static Logger _logger = Logger.getLogger(DomoSwitch.class);	
 				
 	// -------------- function ----------------
 
 	public DomoSwitch(String name, String nameGPIO) 
 	{
-		// TODO Auto-generated constructor stub
 		super(name);
+		_logger.debug("Create DomoSwitch " + name + " -> " + nameGPIO);
 		_gpioName = nameGPIO;
+		_gpio = (DomoGPIO) DomoObject.GetObjectByName(nameGPIO.toLowerCase());
 	}
 	
 	public void SwitchON()
 	{
 		_state = 1;
+		// gpio.high
 	}
 
 	public void SwitchOFF()
 	{
 		_state = 0;
+		// gpio.low
 	}
 	
 	public boolean IsON()
 	{
 		return (1 == GetState()) ? true : false;
+	}
+	
+	public boolean IsUnknownState()
+	{
+		return (-1 == GetState()) ? true : false;
 	}
 	
 	
@@ -72,7 +84,7 @@ public class DomoSwitch extends DomoObject
 		return _mode;
 	}
 	
-	public String ModeToString(int mode)
+	public static String ModeToString(int mode)
 	{
 		switch(mode)
 		{
@@ -83,7 +95,7 @@ public class DomoSwitch extends DomoObject
 		}
 	}
 
-	public int StringToMode(String s)
+	public static int StringToMode(String s)
 	{
 		switch(s.toLowerCase())
 		{
@@ -92,7 +104,7 @@ public class DomoSwitch extends DomoObject
 			case "forcedoff": { return 2; }
 			default:
 			{
-				_logger.error("Mode inconnu <" + s + "> pour " + _name);
+				_logger.error("Mode inconnu <" + s + ">");
 				return -1;
 			}
 		}

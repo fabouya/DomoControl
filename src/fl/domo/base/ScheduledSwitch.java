@@ -20,6 +20,14 @@ public class ScheduledSwitch extends DomoScheduledObject
 		super(name, calendarName);
 		_switchName = switchname;
 		_switchObject = (DomoSwitch) DomoObject.GetObjectByName(_switchName);
+		try
+		{
+			_switchObject.SwitchOFF();
+		}
+		catch(Exception e)
+		{
+			_logger.error("Erreur de creation de <" + name +"> <" + calendarName + "> <" + switchname + ">");
+		}
 	}
 
 	@Override
@@ -39,7 +47,7 @@ public class ScheduledSwitch extends DomoScheduledObject
 		}
 		else
 		{
-			if(_switchObject.IsON())
+			if(_switchObject.IsON() || _switchObject.IsUnknownState())
 			{
 				_logger.debug("Désactivation switch " + _name);
 				_switchObject.SwitchOFF();

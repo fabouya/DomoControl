@@ -49,14 +49,16 @@
 <config>
 
 <gpios>
-	<gpio name="pompegio" id="6" />
-	<gpio name="robotgio" id="8" />
+	<gpio name="pompegpio" id="6" />
+	<gpio name="robotgpio" id="8" />
+	<gpio name="lumieregpio" id="8" />
+	
 </gpios>
 
 <switchs>
 	<switch name="pompeswitch" gpioname="pompegpio"/>
-	<inverseswitch name="robotswitch" gpioname="robotpio"/>
-	<inverseswitch name="lumiereswitch" gpioname="robotpio"/>
+	<inverseswitch name="robotswitch" gpioname="robotgpio"/>
+	<inverseswitch name="lumiereswitch" gpioname="lumieregpio"/>
 </switchs>
 
 <calendars>

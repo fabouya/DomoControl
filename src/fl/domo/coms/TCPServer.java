@@ -36,7 +36,6 @@ public class TCPServer
 		String capitalizedSentence;
 		_engine = new SimpleCommandEngine();
 		
-		@SuppressWarnings("resource")
 		ServerSocket welcomeSocket = new ServerSocket(_portNumber);
 		
 
@@ -63,16 +62,27 @@ public class TCPServer
 				capitalizedSentence += '\n';
 			}
 
-			if (null != _engine) 
+			try
 			{
-				String result = _engine.RunCommand(capitalizedSentence);
-				outToClient.writeBytes(result + '\n');
+				if (null != _engine) 
+				{
+					String result = _engine.RunCommand(capitalizedSentence);
+					outToClient.writeBytes(result + '\n');
+				}				
+
+				inFromClient.close();
+				outToClient.close();
+				connectionSocket.close();			
+
+			}
+			catch(Exception e)
+			{
+				inFromClient.close();
+				outToClient.close();
+				connectionSocket.close();							
 			}
 			
-			inFromClient.close();
-			outToClient.close();
-			connectionSocket.close();			
-
+			
 		}
 		
 		_logger.info("Exit TCP Server");
