@@ -85,20 +85,24 @@ public class DomoBrain
 		// JMS Server thread
 		JmsServerThread jms = new JmsServerThread("JMSServer");
 				
-		//scheduler.start();
+		scheduler.start();
 		tcpserver.start();
-		//jms.start();
+		jms.start();
 		
 //4
 		// entrer dans la boucle principale
-		while (false == Global._quitFlag) {
+		while (false == Global._quitFlag) 
+		{
 			try {
-				Thread.sleep(50);
-			} catch (InterruptedException e) {
+				Thread.sleep(500);
+			} catch (InterruptedException e) 
+			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+		
+		jms.EndJMSConsumer();
 		
 	}
 

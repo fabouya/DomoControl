@@ -19,6 +19,11 @@ public class JmsServerThread extends DomoThread
 		// TODO Auto-generated constructor stub
 	}
 
+	public void EndJMSConsumer()
+	{
+		_jmsConsumer.EndJMSConsumer();
+	}
+	
 	public void run() 
 	{
 

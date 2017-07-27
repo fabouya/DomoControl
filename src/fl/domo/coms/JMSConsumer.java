@@ -20,7 +20,10 @@ public class JMSConsumer implements MessageListener
     private boolean 			_transacted = false;
     private MessageProducer 	_replyProducer;
     private MessageProtocol 	_messageProtocol;
-     
+    private Connection 			_connection;
+    private MessageConsumer		_consumer;
+    private Destination 		_adminQueue;
+    
     {
         _messageBrokerUrl = Global._jmsProvider;
         _messageQueueName = Global._commandQueueName;
@@ -43,21 +46,34 @@ public class JMSConsumer implements MessageListener
         _messageProtocol = new MessageProtocol();
         setupMessageQueueConsumer();
     }
+    
+    public void EndJMSConsumer()
+    {
+    	try {
+			_consumer.close();
+	    	_session.close();
+	    	_connection.close();
+		} 
+    	catch (JMSException e) 
+    	{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
  
     private void setupMessageQueueConsumer() 
     {
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(_messageBrokerUrl);
-        Connection connection;
         
         Boolean waitformq = true;
         
         while(waitformq)
         {      
 	        try {
-	            connection = connectionFactory.createConnection();
-	            connection.start();
-	            _session = connection.createSession(_transacted, _ackMode);
-	            Destination adminQueue = _session.createQueue(_messageQueueName);
+	            _connection = connectionFactory.createConnection();
+	            _connection.start();
+	            _session = _connection.createSession(_transacted, _ackMode);
+	            _adminQueue = _session.createQueue(_messageQueueName);
 	 
 	            //Setup a message producer to respond to messages from clients, we will get the destination
 	            //to send to from the JMSReplyTo header field from a Message
@@ -65,7 +81,7 @@ public class JMSConsumer implements MessageListener
 	            _replyProducer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 	 
 	            //Set up a consumer to consume messages off of the admin queue
-	            MessageConsumer _consumer = _session.createConsumer(adminQueue);
+	            _consumer = _session.createConsumer(_adminQueue);
 	            _consumer.setMessageListener(this);
 	            waitformq = false;
 	        } 
@@ -80,7 +96,7 @@ public class JMSConsumer implements MessageListener
 				} catch (InterruptedException e1) 
 	        	{
 					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					_logger.error(e1.getMessage());
 				}
 	        }
         }
