@@ -49,26 +49,40 @@ public class JMSConsumer implements MessageListener
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(_messageBrokerUrl);
         Connection connection;
         
-        try {
-            connection = connectionFactory.createConnection();
-            connection.start();
-            _session = connection.createSession(_transacted, _ackMode);
-            Destination adminQueue = _session.createQueue(_messageQueueName);
- 
-            //Setup a message producer to respond to messages from clients, we will get the destination
-            //to send to from the JMSReplyTo header field from a Message
-            _replyProducer = _session.createProducer(null);
-            _replyProducer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
- 
-            //Set up a consumer to consume messages off of the admin queue
-            MessageConsumer _consumer = _session.createConsumer(adminQueue);
-            _consumer.setMessageListener(this);
-        } 
-        catch (JMSException e) 
-        {
-            //Handle the exception appropriately
-        	_logger.error("Erreur connexion activemq", e);
-        	System.exit(1);        	
+        Boolean waitformq = true;
+        
+        while(waitformq)
+        {      
+	        try {
+	            connection = connectionFactory.createConnection();
+	            connection.start();
+	            _session = connection.createSession(_transacted, _ackMode);
+	            Destination adminQueue = _session.createQueue(_messageQueueName);
+	 
+	            //Setup a message producer to respond to messages from clients, we will get the destination
+	            //to send to from the JMSReplyTo header field from a Message
+	            _replyProducer = _session.createProducer(null);
+	            _replyProducer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
+	 
+	            //Set up a consumer to consume messages off of the admin queue
+	            MessageConsumer _consumer = _session.createConsumer(adminQueue);
+	            _consumer.setMessageListener(this);
+	            waitformq = false;
+	        } 
+	        catch (JMSException e) 
+	        {
+	            //Handle the exception appropriately
+	        	_logger.error("Erreur connexion activemq", e);
+	        	waitformq = true;
+	        	try 
+	        	{
+					Thread.sleep(5000);
+				} catch (InterruptedException e1) 
+	        	{
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+	        }
         }
     }
  
