@@ -49,6 +49,52 @@ public class CommandEngine
 	
 	// ------------- Decodeur -----------------
 	
+	protected synchronized String HandleCommand(JSONObject jsonObject)
+	{
+		JSONObject jsonobj = null;
+
+		String command = (String) jsonObject.get("command");
+		
+		if(null == command)
+		{
+			jsonobj = BuilJSONError("Missing command tag");
+		}
+		else
+		{
+			switch(command.toUpperCase())
+			{
+				case "STATUS":
+					jsonobj = Status(jsonObject);
+				break;
+				
+				case "MODE":
+					jsonobj = Mode(jsonObject);
+				break;
+				
+				case "SET":
+					jsonobj = Set(jsonObject);
+				break;
+
+				case "RELOAD":
+					jsonobj = Reload(jsonObject);
+				break;
+					
+				case "STOP":
+					jsonobj = Stop(jsonObject);
+				break;
+				
+				default:
+					jsonobj = BuilJSONError("unknown command request : " + command );						
+			}
+		}
+		
+		String jsonString = jsonobj.toJSONString();
+		
+		return jsonString;								
+		
+	}
+
+	
 	public synchronized String RunCommand(String jsonCommand)
 	{
 		JSONObject jsonobj = null;
@@ -61,53 +107,31 @@ public class CommandEngine
 			JSONObject jsonObject = (JSONObject) parser.parse(jsonCommand);
 	
 			//1 check tag is command
-			String tag = (String) jsonObject.get("tag");		
+			String tag = (String) jsonObject.get("tag");
 			
-			if("COMMAND".equals(tag.toUpperCase()))
+			if(null == tag)
 			{
-				String command = (String) jsonObject.get("command");
+				_logger.error("l'entree <tag> est absente du json");
+				return BuilJSONError("entree <tag> absente").toJSONString();
+			}
+			
+			switch(tag.toUpperCase())
+			{
+				case "COMMAND":
+				{
+					return HandleCommand(jsonObject);
+				}
 				
-				if(null == command)
+				default:
 				{
-					jsonobj = BuilJSONError("Missing command tag");
+					jsonobj = BuilJSONError("not a command request : " + tag );
+
+					String jsonString = jsonobj.toJSONString();
+					
+					return jsonString;								
 				}
-				else
-				{
-					switch(command.toUpperCase())
-					{
-						case "STATUS":
-							jsonobj = Status(jsonObject);
-						break;
-						
-						case "MODE":
-							jsonobj = Mode(jsonObject);
-						break;
-						
-						case "SET":
-							jsonobj = Set(jsonObject);
-						break;
-	
-						case "RELOAD":
-							jsonobj = Reload(jsonObject);
-						break;
-							
-						case "STOP":
-							jsonobj = Stop(jsonObject);
-						break;
-						
-						default:
-							jsonobj = BuilJSONError("unknown command request : " + command );						
-					}
-				}
-			}
-			else
-			{
-				jsonobj = BuilJSONError("not a command request : " + tag );
-			}
+			} // switch
 			
-			String jsonString = jsonobj.toJSONString();
-			
-			return jsonString;			
 		}
 		catch(Exception e)
 		{	

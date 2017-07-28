@@ -15,7 +15,7 @@ public class DomoObject
 // ---------- static members -------------
 	
 	protected static	int		_counter = 0;
-	private	static	Hashtable<String, DomoObject>	_ht = new Hashtable<String, DomoObject>();
+	private static	Hashtable<String, DomoObject>	_ht = new Hashtable<String, DomoObject>();
 	protected final static Logger _logger = Logger.getLogger(DomoObject.class);
 	
 // -------------- function ----------------
