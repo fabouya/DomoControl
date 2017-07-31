@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import fl.domo.base.BasicCommands;
 import fl.domo.base.DomoObject;
 import fl.domo.tools.Global;
 
@@ -64,20 +65,22 @@ public class CommandEngine
 			switch(command.toUpperCase())
 			{
 				case "STATUS":
-					jsonobj = Status(jsonObject);
-				break;
+					return Status(jsonObject);
+				
 				
 				case "MODE":
-					jsonobj = Mode(jsonObject);
-				break;
+					return Mode(jsonObject);
+				
 				
 				case "SET":
-					jsonobj = Set(jsonObject);
-				break;
+					return Set(jsonObject);
+				
+				case "GET":
+					return Get(jsonObject);
 
 				case "RELOAD":
-					jsonobj = Reload(jsonObject);
-				break;
+					return Reload(jsonObject);
+				
 					
 				case "STOP":
 					jsonobj = Stop(jsonObject);
@@ -115,9 +118,9 @@ public class CommandEngine
 				return BuilJSONError("entree <tag> absente").toJSONString();
 			}
 			
-			switch(tag.toUpperCase())
+			switch(tag.toLowerCase())
 			{
-				case "COMMAND":
+				case "command":
 				{
 					return HandleCommand(jsonObject);
 				}
@@ -146,55 +149,27 @@ public class CommandEngine
 	
 	//+++++++++++++++++++++++++ STATUS +++++++++++++++++++++++++++++++
 		
-		protected JSONObject Status(JSONObject command)
+		protected String Status(JSONObject command)
 		{
 			_logger.info("command : STATUS");           
-			
-	        JSONObject obj = BuilJSONSuccess();
-/*	        
-	        obj.put("pompe", String.valueOf(Global._PumpGPIO.IsActivated()));
-	        obj.put("robot", String.valueOf(Global._RobotGPIO.IsActivated()));
-	        obj.put("lumiere", String.valueOf(Global._LumiereGPIO.IsActivated()));      
-*/
-	        if(Level.DEBUG == _logger.getLevel())
-	        {
-	        	String s = obj.toJSONString();
-	        	_logger.debug("Return : " + s);
-	        }
-					
-			return obj;
+				        
+	        return BasicCommands.JsonStatusAll();
+	        
 		}
 
 	//+++++++++++++++++++++++++ MODE +++++++++++++++++++++++++++++++
 		
-		protected JSONObject Mode(JSONObject command)
+		protected String Mode(JSONObject command)
 		{
 			_logger.info("command : MODE");           
-			
-	        JSONObject obj = BuilJSONSuccess();
-/*        
-	        obj.put("pompe", String.valueOf(Global._PumpGPIO.GetMode()));
-	        obj.put("robot", String.valueOf(Global._RobotGPIO.GetMode()));
-	        obj.put("lumiere", String.valueOf(Global._LumiereGPIO.GetMode()));      
-*/
-	        if(Level.DEBUG == _logger.getLevel())
-	        {
-	        	String s = obj.toJSONString();
-	        	_logger.debug("Return : " + s);
-	        }
-					
-			return obj;	}
+								
+			return BasicCommands.JsonModeAll();			
+		}
 
 	//+++++++++++++++++++++++++ SET +++++++++++++++++++++++++++++++
 		
-		protected JSONObject Set(JSONObject command)
+		protected String Set(JSONObject command)
 		{
-			DomoObject target = null;
-			
-			// parametres:
-			// device = <pompe|robot|lumiere>
-			// mode = <0|1|2>
-			
 			String device = (String) command.get("device");		
 			String mode = (String) command.get("mode");
 			
@@ -202,62 +177,45 @@ public class CommandEngine
 			
 			if((null == device) || (null == mode))
 			{
-				return jsonErr;
+				return jsonErr.toJSONString();
 			}
 
-/*			
-			switch(device.toUpperCase())
+			DomoObject o = DomoObject.GetObjectByName(device);
+
+			if (null == o) 
 			{
-				case "POMPE":
-					target = Global._PumpGPIO;
-				break;
-
-				case "ROBOT":
-					target = Global._RobotGPIO;
-				break;
-
-				case "LUMIERE":
-					target = Global._LumiereGPIO;
-				break;
-				
-				default:
-					return jsonErr;				
+				_logger.error("set to unknown target : <" + device + ">");
+				return jsonErr.toJSONString();
 			}
 			
-			switch(mode.toUpperCase())
+			if(o instanceof fl.domo.base.DomoSwitch)
 			{
-				case "AUTO":
-					target.SetModeAuto();
-				break;
-
-				case "FORCEDON":
-					target.SetModeForcedON();
-				break;
-
-				case "FORCEDOFF":
-					target.SetModeForcedOFF();
-				break;
-				
-				default:
-					return jsonErr;				
+				if("OK".equals(((fl.domo.base.DomoSwitch) o).SetMode(mode)))
+				{
+					return BuilJSONSuccess().toJSONString();
+				}
+				else
+				{
+					return jsonErr.toJSONString();									
+				}
 			}
-*/					
-			return BuilJSONSuccess();
+			else
+			{
+				_logger.error("set to bad class target : <" + device + ">");
+				return jsonErr.toJSONString();				
+			}
 		}
 		
 	//+++++++++++++++++++++++++ RELOAD +++++++++++++++++++++++++++++++
 		
-		protected JSONObject Reload(JSONObject command)
+		protected String Reload(JSONObject command)
 		{
 			_logger.debug("command : RELOAD");
-/*			
-			Global._calendrierPompe.Reload();
-			Global._calendrierRobot.Reload();
-			Global._calendrierLumiere.Reload();
-*/
-			JSONObject obj = BuilJSONSuccess();
+			JSONObject jsonErr = BuilJSONError("Commande reload non implementee");
 			
-			return obj;
+//			JSONObject obj = BuilJSONSuccess();
+			
+			return jsonErr.toJSONString();
 		}
 
 	//+++++++++++++++++++++++++ STOP +++++++++++++++++++++++++++++++
@@ -273,6 +231,45 @@ public class CommandEngine
 			return obj;
 		}
 
+	//+++++++++++++++++++++++++ Get +++++++++++++++++++++++++++++++
+		
+		protected String Get(JSONObject command)
+		{
+			String device = (String) command.get("device");		
+			String mode = (String) command.get("mode");
+			
+			JSONObject jsonErr = BuilJSONError("Error in SET command");
+			
+			if((null == device) || (null == mode))
+			{
+				return jsonErr.toJSONString();
+			}
+
+			DomoObject o = DomoObject.GetObjectByName(device);
+
+			if (null == o) 
+			{
+				_logger.error("set to unknown target : <" + device + ">");
+				return jsonErr.toJSONString();
+			}
+			
+			if(o instanceof fl.domo.base.DomoSwitch)
+			{
+				if("OK".equals(((fl.domo.base.DomoSwitch) o).SetMode(mode)))
+				{
+					return BuilJSONSuccess().toJSONString();
+				}
+				else
+				{
+					return jsonErr.toJSONString();									
+				}
+			}
+			else
+			{
+				_logger.error("set to bad class target : <" + device + ">");
+				return jsonErr.toJSONString();				
+			}
+		}
 	
 	
 	
