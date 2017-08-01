@@ -3,12 +3,10 @@ package fl.domo.main;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
-import fl.domo.base.DomoObject;
 import fl.domo.base.DomoObjectFactory;
 import fl.domo.threads.JmsServerThread;
 import fl.domo.threads.SchedulerThread;

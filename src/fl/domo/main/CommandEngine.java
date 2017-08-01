@@ -1,6 +1,6 @@
 package fl.domo.main;
 
-import org.apache.log4j.Level;
+
 import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -184,7 +184,7 @@ public class CommandEngine
 
 			if (null == o) 
 			{
-				_logger.error("set to unknown target : <" + device + ">");
+				_logger.error("set sur un object inconnu : <" + device + ">");
 				return jsonErr.toJSONString();
 			}
 			
@@ -249,7 +249,7 @@ public class CommandEngine
 
 			if (null == o) 
 			{
-				_logger.error("set to unknown target : <" + device + ">");
+				_logger.error("get sur un object inconnu : <" + device + ">");
 				return jsonErr.toJSONString();
 			}
 			
@@ -266,7 +266,7 @@ public class CommandEngine
 			}
 			else
 			{
-				_logger.error("set to bad class target : <" + device + ">");
+				_logger.error("get to bad class target : <" + device + ">");
 				return jsonErr.toJSONString();				
 			}
 		}
