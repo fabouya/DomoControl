@@ -43,6 +43,8 @@ Install ActiveMQ server
 
 ### Architecture
 
+![Schéma d'architecture](https://raw.githubusercontent.com/fabouya/DomoControl/tree/sans-classpath/docs/img/archi1.png)
+
 ### Hierarchie des classes
 
 ## Tests
