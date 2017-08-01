@@ -21,11 +21,29 @@ Dans cet exemple en particulier, il s'agit de gerer un ecosysteme centré sur un
 
 ## Installation
 
-Provide code examples and explanations of how to get the project.
+Install Java Openjdk
+
+apt-get ...
+
+Install wired Pi
+
+Install Pi4J
+
+...
+
+Grab java libraries
+- json simple
+- active mq
+- log4j
+
+Install ActiveMQ server
+
 
 ## API Reference
 
-Depending on the size of the project, if it is small and simple enough the reference docs can be added to the README. For medium size to larger projects it is important to at least provide a link to where the API reference docs live.
+### Architecture
+
+### Hierarchie des classes
 
 ## Tests
 
