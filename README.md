@@ -41,11 +41,18 @@ Install ActiveMQ server
 
 ## API Reference
 
-### Architecture
+### Architecture générale
 
 ![Screenshot](docs/img/archi1.png)
 
+### Architecture interne
+
+![Screenshot](docs/img/archi2.png)
+
+
 ### Hierarchie des classes
+
+![Screenshot](docs/img/hierarchie.png)
 
 ## Tests
 
