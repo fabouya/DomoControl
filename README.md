@@ -23,7 +23,11 @@ Dans cet exemple en particulier, il s'agit de gerer un ecosysteme centré sur un
 
 Install Java Openjdk
 
-apt-get ...
+le classique :
+```
+apt-get update  
+apt-get install oracle-java8-jdk  
+```
 
 Install wired Pi
 
