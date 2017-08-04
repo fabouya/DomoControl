@@ -31,6 +31,8 @@ apt-get install oracle-java8-jdk
 
 Install wired Pi
 
+La procedure complète se trouve ici : [wiringpi installation guide](http://wiringpi.com/download-and-install/)
+
 Install Pi4J
 
 ...
