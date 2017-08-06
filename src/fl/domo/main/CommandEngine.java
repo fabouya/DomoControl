@@ -1,10 +1,11 @@
 package fl.domo.main;
 
-import org.apache.log4j.Level;
+
 import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import fl.domo.base.BasicCommands;
 import fl.domo.base.DomoObject;
 import fl.domo.tools.Global;
 
@@ -49,6 +50,54 @@ public class CommandEngine
 	
 	// ------------- Decodeur -----------------
 	
+	protected synchronized String HandleCommand(JSONObject jsonObject)
+	{
+		JSONObject jsonobj = null;
+
+		String command = (String) jsonObject.get("command");
+		
+		if(null == command)
+		{
+			jsonobj = BuilJSONError("Missing command tag");
+		}
+		else
+		{
+			switch(command.toUpperCase())
+			{
+				case "STATUS":
+					return Status(jsonObject);
+				
+				
+				case "MODE":
+					return Mode(jsonObject);
+				
+				
+				case "SET":
+					return Set(jsonObject);
+				
+				case "GET":
+					return Get(jsonObject);
+
+				case "RELOAD":
+					return Reload(jsonObject);
+				
+					
+				case "STOP":
+					jsonobj = Stop(jsonObject);
+				break;
+				
+				default:
+					jsonobj = BuilJSONError("unknown command request : " + command );						
+			}
+		}
+		
+		String jsonString = jsonobj.toJSONString();
+		
+		return jsonString;								
+		
+	}
+
+	
 	public synchronized String RunCommand(String jsonCommand)
 	{
 		JSONObject jsonobj = null;
@@ -61,53 +110,31 @@ public class CommandEngine
 			JSONObject jsonObject = (JSONObject) parser.parse(jsonCommand);
 	
 			//1 check tag is command
-			String tag = (String) jsonObject.get("tag");		
+			String tag = (String) jsonObject.get("tag");
 			
-			if("COMMAND".equals(tag.toUpperCase()))
+			if(null == tag)
 			{
-				String command = (String) jsonObject.get("command");
+				_logger.error("l'entree <tag> est absente du json");
+				return BuilJSONError("entree <tag> absente").toJSONString();
+			}
+			
+			switch(tag.toLowerCase())
+			{
+				case "command":
+				{
+					return HandleCommand(jsonObject);
+				}
 				
-				if(null == command)
+				default:
 				{
-					jsonobj = BuilJSONError("Missing command tag");
+					jsonobj = BuilJSONError("not a command request : " + tag );
+
+					String jsonString = jsonobj.toJSONString();
+					
+					return jsonString;								
 				}
-				else
-				{
-					switch(command.toUpperCase())
-					{
-						case "STATUS":
-							jsonobj = Status(jsonObject);
-						break;
-						
-						case "MODE":
-							jsonobj = Mode(jsonObject);
-						break;
-						
-						case "SET":
-							jsonobj = Set(jsonObject);
-						break;
-	
-						case "RELOAD":
-							jsonobj = Reload(jsonObject);
-						break;
-							
-						case "STOP":
-							jsonobj = Stop(jsonObject);
-						break;
-						
-						default:
-							jsonobj = BuilJSONError("unknown command request : " + command );						
-					}
-				}
-			}
-			else
-			{
-				jsonobj = BuilJSONError("not a command request : " + tag );
-			}
+			} // switch
 			
-			String jsonString = jsonobj.toJSONString();
-			
-			return jsonString;			
 		}
 		catch(Exception e)
 		{	
@@ -122,55 +149,27 @@ public class CommandEngine
 	
 	//+++++++++++++++++++++++++ STATUS +++++++++++++++++++++++++++++++
 		
-		protected JSONObject Status(JSONObject command)
+		protected String Status(JSONObject command)
 		{
 			_logger.info("command : STATUS");           
-			
-	        JSONObject obj = BuilJSONSuccess();
-/*	        
-	        obj.put("pompe", String.valueOf(Global._PumpGPIO.IsActivated()));
-	        obj.put("robot", String.valueOf(Global._RobotGPIO.IsActivated()));
-	        obj.put("lumiere", String.valueOf(Global._LumiereGPIO.IsActivated()));      
-*/
-	        if(Level.DEBUG == _logger.getLevel())
-	        {
-	        	String s = obj.toJSONString();
-	        	_logger.debug("Return : " + s);
-	        }
-					
-			return obj;
+				        
+	        return BasicCommands.JsonStatusAll();
+	        
 		}
 
 	//+++++++++++++++++++++++++ MODE +++++++++++++++++++++++++++++++
 		
-		protected JSONObject Mode(JSONObject command)
+		protected String Mode(JSONObject command)
 		{
 			_logger.info("command : MODE");           
-			
-	        JSONObject obj = BuilJSONSuccess();
-/*        
-	        obj.put("pompe", String.valueOf(Global._PumpGPIO.GetMode()));
-	        obj.put("robot", String.valueOf(Global._RobotGPIO.GetMode()));
-	        obj.put("lumiere", String.valueOf(Global._LumiereGPIO.GetMode()));      
-*/
-	        if(Level.DEBUG == _logger.getLevel())
-	        {
-	        	String s = obj.toJSONString();
-	        	_logger.debug("Return : " + s);
-	        }
-					
-			return obj;	}
+								
+			return BasicCommands.JsonModeAll();			
+		}
 
 	//+++++++++++++++++++++++++ SET +++++++++++++++++++++++++++++++
 		
-		protected JSONObject Set(JSONObject command)
+		protected String Set(JSONObject command)
 		{
-			DomoObject target = null;
-			
-			// parametres:
-			// device = <pompe|robot|lumiere>
-			// mode = <0|1|2>
-			
 			String device = (String) command.get("device");		
 			String mode = (String) command.get("mode");
 			
@@ -178,62 +177,45 @@ public class CommandEngine
 			
 			if((null == device) || (null == mode))
 			{
-				return jsonErr;
+				return jsonErr.toJSONString();
 			}
 
-/*			
-			switch(device.toUpperCase())
+			DomoObject o = DomoObject.GetObjectByName(device);
+
+			if (null == o) 
 			{
-				case "POMPE":
-					target = Global._PumpGPIO;
-				break;
-
-				case "ROBOT":
-					target = Global._RobotGPIO;
-				break;
-
-				case "LUMIERE":
-					target = Global._LumiereGPIO;
-				break;
-				
-				default:
-					return jsonErr;				
+				_logger.error("set sur un object inconnu : <" + device + ">");
+				return jsonErr.toJSONString();
 			}
 			
-			switch(mode.toUpperCase())
+			if(o instanceof fl.domo.base.DomoSwitch)
 			{
-				case "AUTO":
-					target.SetModeAuto();
-				break;
-
-				case "FORCEDON":
-					target.SetModeForcedON();
-				break;
-
-				case "FORCEDOFF":
-					target.SetModeForcedOFF();
-				break;
-				
-				default:
-					return jsonErr;				
+				if("OK".equals(((fl.domo.base.DomoSwitch) o).SetMode(mode)))
+				{
+					return BuilJSONSuccess().toJSONString();
+				}
+				else
+				{
+					return jsonErr.toJSONString();									
+				}
 			}
-*/					
-			return BuilJSONSuccess();
+			else
+			{
+				_logger.error("set to bad class target : <" + device + ">");
+				return jsonErr.toJSONString();				
+			}
 		}
 		
 	//+++++++++++++++++++++++++ RELOAD +++++++++++++++++++++++++++++++
 		
-		protected JSONObject Reload(JSONObject command)
+		protected String Reload(JSONObject command)
 		{
 			_logger.debug("command : RELOAD");
-/*			
-			Global._calendrierPompe.Reload();
-			Global._calendrierRobot.Reload();
-			Global._calendrierLumiere.Reload();
-*/
-			JSONObject obj = BuilJSONSuccess();
+			JSONObject jsonErr = BuilJSONError("Commande reload non implementee");
 			
-			return obj;
+//			JSONObject obj = BuilJSONSuccess();
+			
+			return jsonErr.toJSONString();
 		}
 
 	//+++++++++++++++++++++++++ STOP +++++++++++++++++++++++++++++++
@@ -249,6 +231,45 @@ public class CommandEngine
 			return obj;
 		}
 
+	//+++++++++++++++++++++++++ Get +++++++++++++++++++++++++++++++
+		
+		protected String Get(JSONObject command)
+		{
+			String device = (String) command.get("device");		
+			String mode = (String) command.get("mode");
+			
+			JSONObject jsonErr = BuilJSONError("Error in SET command");
+			
+			if((null == device) || (null == mode))
+			{
+				return jsonErr.toJSONString();
+			}
+
+			DomoObject o = DomoObject.GetObjectByName(device);
+
+			if (null == o) 
+			{
+				_logger.error("get sur un object inconnu : <" + device + ">");
+				return jsonErr.toJSONString();
+			}
+			
+			if(o instanceof fl.domo.base.DomoSwitch)
+			{
+				if("OK".equals(((fl.domo.base.DomoSwitch) o).SetMode(mode)))
+				{
+					return BuilJSONSuccess().toJSONString();
+				}
+				else
+				{
+					return jsonErr.toJSONString();									
+				}
+			}
+			else
+			{
+				_logger.error("get to bad class target : <" + device + ">");
+				return jsonErr.toJSONString();				
+			}
+		}
 	
 	
 	

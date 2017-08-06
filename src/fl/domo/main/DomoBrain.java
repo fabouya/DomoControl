@@ -3,12 +3,10 @@ package fl.domo.main;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
-import fl.domo.base.DomoObject;
 import fl.domo.base.DomoObjectFactory;
 import fl.domo.threads.JmsServerThread;
 import fl.domo.threads.SchedulerThread;
@@ -40,7 +38,9 @@ public class DomoBrain
 			Global._jmsProvider = prop.getProperty("_jmsProvider");
 			Global._commandQueueName = prop.getProperty("commandQueueName");
 			Global._scheduleSleep = Integer.parseInt(prop.getProperty("schedulerSleep"));
-			
+			Global._schedulerEnabled = Boolean.parseBoolean(prop.getProperty("enableScheduler"));
+			Global._jmsEnabled = Boolean.parseBoolean(prop.getProperty("enableJMS"));
+			Global._tcpEnabled = Boolean.parseBoolean(prop.getProperty("enableTcpServer"));
 
 		} 
 		catch (final IOException ex) 
@@ -75,19 +75,41 @@ public class DomoBrain
 		factory.BuildFromXML("configtest.xml");
 		
 //3
+		SchedulerThread scheduler = null;
+		TcpServerThread tcpserver = null;
+		JmsServerThread jms = null;
+		
 		// lancer les threads de serveurs
 		// Scheduling thread
-		SchedulerThread scheduler = new SchedulerThread("Scheduler"); 
+		if(Global._schedulerEnabled)
+			scheduler = new SchedulerThread("Scheduler"); 
 		
 		// TCPServer thread
-		TcpServerThread tcpserver = new TcpServerThread("TcpServerThread");
+		if(Global._tcpEnabled)
+			tcpserver = new TcpServerThread("TcpServerThread");
 		
 		// JMS Server thread
-		JmsServerThread jms = new JmsServerThread("JMSServer");
+		if(Global._jmsEnabled)
+			jms = new JmsServerThread("JMSServer");
 				
-		scheduler.start();
-		tcpserver.start();
-		jms.start();
+		if(Global._schedulerEnabled)
+		{
+			_logger.debug("Start thread scheduler");
+			scheduler.start();
+		}
+		
+		if(Global._tcpEnabled)
+		{
+			_logger.debug("Start thread tcp server");
+			tcpserver.start();
+		}
+		
+		if(Global._jmsEnabled)
+		{
+			_logger.debug("Start thread jms");
+			
+			jms.start();
+		}
 		
 //4
 		// entrer dans la boucle principale
@@ -102,7 +124,8 @@ public class DomoBrain
 			}
 		}
 		
-		jms.EndJMSConsumer();
+		if(Global._jmsEnabled)
+			jms.EndJMSConsumer();
 		
 	}
 

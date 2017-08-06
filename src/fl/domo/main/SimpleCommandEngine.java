@@ -12,6 +12,7 @@ import fl.domo.base.DomoObject;
 import fl.domo.base.DomoSwitch;
 import fl.domo.tools.Global;
 import fl.domo.tools.Tools;
+import fl.domo.base.BasicCommands;
 
 public class SimpleCommandEngine 
 {
@@ -109,31 +110,12 @@ public class SimpleCommandEngine
 				
 				if(items[2].toLowerCase().equals("mode"))
 				{
-			        JSONObject json = new JSONObject();
-			        json.put("TAG", "MODE");
-			        json.put("STATUS", "OK");
-
-			        for(DomoObject o : objs)
-					{
-						String mode = String.valueOf(((DomoSwitch) o).GetMode());
-						json.put(o.GetName(), mode);
-					}
-					return json.toJSONString();
+					return BasicCommands.JsonModeAll();
 				}
 				else
 					if(items[2].toLowerCase().equals("status"))
 					{
-				        JSONObject json = new JSONObject();
-				        json.put("TAG", "STATUS");
-				        json.put("STATUS", "OK");
-				        
-						for(DomoObject o : objs)
-						{
-							String state = String.valueOf(((DomoSwitch) o).GetState());
-							json.put(o.GetName(), state);
-						}
-						
-						return json.toJSONString();
+						return BasicCommands.JsonStatusAll();
 					}
 					else
 					{
@@ -160,27 +142,12 @@ public class SimpleCommandEngine
 			
 			if(items[2].toLowerCase().equals("mode"))
 			{
-		        JSONObject json = new JSONObject();
-		        json.put("TAG", "MODE");
-		        json.put("STATUS", "OK");
-		        
-				String mode = String.valueOf(((DomoSwitch) o).GetMode());
-				json.put(o.GetName(), mode);
-		     
-				return json.toJSONString();
+				return BasicCommands.JsonGetMode(items[1]);
 			}
 			else
 				if(items[2].toLowerCase().equals("status"))
-				{
-			        JSONObject json = new JSONObject();
-			        json.put("TAG", "STATUS");
-			        json.put("STATUS", "OK");
-			        
-					String state = String.valueOf(((DomoSwitch) o).GetState());
-					json.put(o.GetName(), state);
-					
-					return json.toJSONString();
-					
+				{				
+					return BasicCommands.JsonGetStatus(items[1]);					
 				}
 				else
 				{

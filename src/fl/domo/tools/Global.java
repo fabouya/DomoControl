@@ -9,4 +9,8 @@ public class Global
 	public static int				_scheduleSleep = 5000;
 	public static String 			_jmsProvider = "";
 	public static String 			_commandQueueName = "";	
+	public static boolean			_schedulerEnabled = true;
+	public static boolean			_jmsEnabled = true;
+	public static boolean			_tcpEnabled = true;
+	
 }
