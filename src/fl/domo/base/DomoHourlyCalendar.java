@@ -26,9 +26,12 @@ public class DomoHourlyCalendar extends DomoCalendar
 	@Override
 	public void SetPeriod(String period)
 	{
-		_logger.debug("Addperiod " + period);
+		_logger.debug("Set period " + period);
 		// periode de la forme "h1, h2, h3, ..."
 		String[] parts = period.split(",");
+		
+		for(int h=0; h < 24; h++)
+			_tabHeures[h] = 0;
 		
 		for(int i=0; i < parts.length; i++)
 		{

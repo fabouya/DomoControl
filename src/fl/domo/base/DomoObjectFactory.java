@@ -217,5 +217,100 @@ public class DomoObjectFactory
 	}
 	
 	
+	protected void ReloadCalendars(Element item)
+	{
+
+		NodeList cals = item.getElementsByTagName("hourlycalendar");
+
+		int nbcal = cals.getLength();		                    
+
+		for(int j = 0; j<nbcal; j++) 
+		{
+		    Element cal = (Element) cals.item(j);
+		    
+		    String name = cal.getAttribute("name");
+		    
+		    DomoObject o = DomoObject.GetObjectByName(name);
+		    
+		    if(null != o)
+		    {
+		    	((DomoHourlyCalendar) o).SetPeriod(cal.getAttribute("hours"));
+		    }
+		    else
+		    {
+			    DomoHourlyCalendar c = new DomoHourlyCalendar(cal.getAttribute("name"));
+			    c.SetPeriod(cal.getAttribute("hours"));		    	
+		    }
+		}
+		
+	}
+
+	
+	public void ReloadXML(String filename)
+	{
+		_logger.debug("Reload config " + filename);
+		
+		try 
+		{
+		    DocumentBuilder builder = factory.newDocumentBuilder();
+		    
+		    Document document= builder.parse(new File(filename));
+		    
+		    _logger.debug(document.getXmlVersion() + " " + document.getXmlEncoding() + " " + document.getXmlStandalone());
+
+		    final Element racine = document.getDocumentElement();
+		    
+		    _logger.debug("Racine : " + racine.getNodeName());
+		    
+		    if(! racine.getNodeName().toLowerCase().equals("config"))
+		    {
+		    	_logger.error("Document xml invalide, la racine doit etre 'config'");
+		    	return;
+		    }
+		    
+		    NodeList racineNoeuds = racine.getChildNodes();
+
+		    int nbRacineNoeuds = racineNoeuds.getLength();            
+
+		    for (int i = 0; i<nbRacineNoeuds; i++) 
+		    {
+		    	if(Node.ELEMENT_NODE == racineNoeuds.item(i).getNodeType()) 
+		    	{
+		    		String nodeType = racineNoeuds.item(i).getNodeName(); 
+		    		
+		    		_logger.debug(nodeType);
+		    		
+		    		switch(nodeType.toLowerCase())
+		    		{
+		    			case "gpios":
+		    			case "switchs":
+		    			case "scheduledswitchs":
+		    			{
+		    				_logger.info("Type ignoré pendant reload : " + nodeType.toLowerCase());
+		    			}
+		    			break;
+		    			
+		    			case "calendars":
+		    			{
+		    				ReloadCalendars((Element) racineNoeuds.item(i));
+		    			}
+		    			break;
+		    			
+		    			default:
+		    			{
+		    				_logger.error("Noeud de type inconnu : " + nodeType);
+		    			}
+		    		}
+		    	}
+		    }		    
+		    
+		}
+
+		catch (ParserConfigurationException | SAXException | IOException e) 
+		{
+		    e.printStackTrace();
+		}		
+	}
+	
 	// ---------- static function -------------
 }
