@@ -8,6 +8,7 @@
 <!ELEMENT gpio (#PCDATA)>
 <!ATTLIST gpio name CDATA #REQUIRED>
 <!ATTLIST gpio id CDATA #REQUIRED>
+<!ATTLIST gpio type CDATA #REQUIRED>
 
 <!ELEMENT switchs (switch*, inverseswitch*)>
 
@@ -49,9 +50,9 @@
 <config>
 
 <gpios>
-	<gpio name="pompegpio" id="6" />
-	<gpio name="robotgpio" id="8" />
-	<gpio name="lumieregpio" id="8" />
+	<gpio name="pompegpio" id="6" type="output" />
+	<gpio name="robotgpio" id="8" type="output" />
+	<gpio name="lumieregpio" id="8" type="output" />
 	
 </gpios>
 

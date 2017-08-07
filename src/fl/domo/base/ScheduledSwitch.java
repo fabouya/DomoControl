@@ -47,7 +47,7 @@ public class ScheduledSwitch extends DomoScheduledObject
 		}
 		else
 		{
-			if(_switchObject.IsON() || _switchObject.IsUnknownState())
+			if(_switchObject.IsON())
 			{
 				_logger.debug("Désactivation switch " + _name);
 				_switchObject.SwitchOFF();

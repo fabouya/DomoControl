@@ -1,45 +1,31 @@
 package fl.domo.base;
 
-public class DomoGPIO extends DomoObject
+import com.pi4j.io.gpio.GpioController;
+import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.Pin;
+import com.pi4j.io.gpio.RaspiPin;
+
+public abstract class DomoGPIO extends DomoObject
 {
 	// -------------- members ----------------
 	
-	protected 	int		_pinNumber;	//wiredPi numerotation
+	protected 	int					_pinNumber;	//wiredPi numerotation
 	// pi4j gpio controler
-		
+
+	protected 	Pin 				_gpioPin;
+	
 	// ---------- static members -------------
-				
+
+	final static protected GpioController _gpioControler = GpioFactory.getInstance();
+	
 	// -------------- function ----------------
 
 		public DomoGPIO(String name, int pinNum)
 		{
 			super(name);
 			_pinNumber = pinNum;
-		}
-		
-		public void SetHigh()
-		{
-			
-		}
-		
-		public void SetLow()
-		{
-			
-		}
-		
-		public void Toggle()
-		{
-			
-		}
-		
-		public void SetOutputMode()
-		{
-			
-		}
-		
-		public void SetInputMode()
-		{
-				
+			_gpioPin = RaspiPin.getPinByAddress(pinNum);
+
 		}
 	// ---------- static function -------------
 		

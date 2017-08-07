@@ -2,13 +2,14 @@ package fl.domo.base;
 
 import org.apache.log4j.Logger;
 
+import com.pi4j.io.gpio.PinState;
+
 public class DomoSwitch extends DomoObject
 {
 	// -------------- members ----------------
 	
-	protected		int			_state=-1;	// -1 = undef, 0 = off, 1 = on
-	protected		String		_gpioName = "undef";
-	protected		DomoGPIO	_gpio = null;
+	protected		String			_gpioName = "undef";
+	protected		DomoOutputGPIO	_gpio = null;
 	
 	protected		int		_mode = 0;
 
@@ -26,36 +27,33 @@ public class DomoSwitch extends DomoObject
 		super(name);
 		_logger.debug("Create DomoSwitch " + name + " -> " + nameGPIO);
 		_gpioName = nameGPIO;
-		_gpio = (DomoGPIO) DomoObject.GetObjectByName(nameGPIO.toLowerCase());
+		_gpio = (DomoOutputGPIO) DomoObject.GetObjectByName(nameGPIO.toLowerCase());
+	}
+	
+	public void InitSwitch()
+	{
+		_gpio.SetLow();		
 	}
 	
 	public void SwitchON()
 	{
-		_state = 1;
-		// gpio.high
+		_gpio.SetHigh();
 	}
 
 	public void SwitchOFF()
 	{
-		_state = 0;
-		// gpio.low
+		_gpio.SetLow();
 	}
+	
 	
 	public boolean IsON()
 	{
-		return (1 == GetState()) ? true : false;
+		return _gpio.IsHigh();
 	}
 	
-	public boolean IsUnknownState()
+	public boolean IsOFF()
 	{
-		return (-1 == GetState()) ? true : false;
-	}
-	
-	
-	public int GetState()
-	{
-		// read gpio
-		return _state;
+		return _gpio.IsLow();
 	}
 
 	public String SetMode(String s)

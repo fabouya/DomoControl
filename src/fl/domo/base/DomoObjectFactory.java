@@ -117,10 +117,31 @@ public class DomoObjectFactory
 		for(int j = 0; j<nbgpios; j++) 
 		{
 		    Element gpio = (Element) gpios.item(j);
+		    String typeGpio = gpio.getAttribute("type");
 
-		    _logger.debug("GPIO : " + gpio.getAttribute("name") + " : " + gpio.getAttribute("id"));
+		    _logger.debug("GPIO : " + gpio.getAttribute("name") + " : " + gpio.getAttribute("id") + ":"  + typeGpio);
 		    
-		    new DomoGPIO(gpio.getAttribute("name"), Integer.parseInt(gpio.getAttribute("id")));
+		    
+		    switch(typeGpio.toLowerCase())
+		    {
+		    	case "output":
+		    	{
+				    new DomoOutputGPIO(gpio.getAttribute("name"), Integer.parseInt(gpio.getAttribute("id")));		    		
+		    	}
+		    	break;
+		    	
+		    	case "input":
+		    	{
+				    new DomoInputGPIO(gpio.getAttribute("name"), Integer.parseInt(gpio.getAttribute("id")));		    		
+		    	}
+		    	break;
+		    	
+		    	default:
+		    	{
+		    		_logger.debug("GPIO : " + gpio.getAttribute("name") + " : " + typeGpio + " : type inconnu");		    		
+		    	}
+		    }
+		    
 		}
 		
 	}
@@ -141,7 +162,8 @@ public class DomoObjectFactory
 
 		    _logger.debug("switch : " + sw.getAttribute("name") + " : " + sw.getAttribute("gpioname"));
 		    
-		    new DomoSwitch(sw.getAttribute("name"), sw.getAttribute("gpioname"));
+		    DomoSwitch s = new DomoSwitch(sw.getAttribute("name"), sw.getAttribute("gpioname"));
+		    s.InitSwitch();
 
 		}
 		
@@ -151,7 +173,8 @@ public class DomoObjectFactory
 
 		    _logger.debug("inverse switch : " + isw.getAttribute("name") + " : " + isw.getAttribute("gpioname"));
 
-		    new DomoInversedSwitch(isw.getAttribute("name"), isw.getAttribute("gpioname"));
+		    DomoInversedSwitch s = new DomoInversedSwitch(isw.getAttribute("name"), isw.getAttribute("gpioname"));
+		    s.InitSwitch();
 		}
 		
 	}
