@@ -1,8 +1,10 @@
 package fl.domo.base;
 
 import org.apache.log4j.Logger;
+/* SANS PI4J
 
 import com.pi4j.io.gpio.PinState;
+*/
 
 public class DomoSwitch extends DomoObject
 {
@@ -79,9 +81,17 @@ public class DomoSwitch extends DomoObject
 	
 	public int GetMode()
 	{
-		return _mode;
+ 		return _mode;
 	}
-	
+
+ 	public int GetState()
+ 	{
+		if(IsON())
+			return 1;
+		else
+			return 0;
+ 	}
+ 	
 	public static String ModeToString(int mode)
 	{
 		switch(mode)

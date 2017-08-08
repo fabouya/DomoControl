@@ -73,7 +73,7 @@ public class DomoBrain
 		
 		Option  Oprop = Option.builder("p")
 						.hasArg()
-						.longOpt("propfile")
+						.longOpt("prop")
 						.required()
 						.argName("prop")
 						.build();

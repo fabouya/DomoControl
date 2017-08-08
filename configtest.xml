@@ -20,7 +20,7 @@
 <!ATTLIST inverseswitch name CDATA #REQUIRED>
 <!ATTLIST inverseswitch gpioname CDATA #REQUIRED>
 
-<!ELEMENT calendars (hourlycalendar*, dailycalendar*, weeklycalendar*, combinedcalendar*)>
+<!ELEMENT calendars (hourlycalendar*, dailycalendar*, weeklycalendar*, monthlycalendar*, combinedcalendar*)>
 
 <!ELEMENT hourlycalendar (#PCDATA)>
 <!ATTLIST hourlycalendar name CDATA #REQUIRED>
@@ -33,6 +33,10 @@
 <!ELEMENT weeklycalendar (#PCDATA)>
 <!ATTLIST weeklycalendar name CDATA #REQUIRED>
 <!ATTLIST weeklycalendar weekdays CDATA #REQUIRED>
+
+<!ELEMENT monthlycalendar (#PCDATA)>
+<!ATTLIST monthlycalendar name CDATA #REQUIRED>
+<!ATTLIST monthlycalendar weekdays CDATA #REQUIRED>
 
 <!ELEMENT combinedcalendar (#PCDATA)>
 <!ATTLIST combinedcalendar name CDATA #REQUIRED>
@@ -66,6 +70,10 @@
 <hourlycalendar name="pompecal" hours="7,8,9,10,11,12,13,14,15,16,17,18"/>
 <hourlycalendar name="robotcal" hours="8,9"/>
 <hourlycalendar name="lumierecal" hours="22,23,0"/>
+<dailycalendar name="JoursPairs" days="2,4,6,8,10,12,14,16,18,20,22,24,26,28,30"/>
+<weeklycalendar name="WeekEndDays" weekdays="6,7"/>
+<weeklycalendar name="WeekDays" weekdays="1,2,3,4,5"/>
+<combinedcalendar name="CalLumiereWeekEnd" liste="lumierecal,WeekEndDays" />
 </calendars>
 
 <scheduledswitchs>

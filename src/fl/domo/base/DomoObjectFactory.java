@@ -178,10 +178,12 @@ public class DomoObjectFactory
 		}
 		
 	}
-
+	
 	protected void ParseCalendars(Element item)
 	{
 
+//------------- HOURLY ----------------------------		
+		
 		NodeList cals = item.getElementsByTagName("hourlycalendar");
 
 		int nbcal = cals.getLength();		                    
@@ -194,6 +196,55 @@ public class DomoObjectFactory
 		    
 		    DomoHourlyCalendar c = new DomoHourlyCalendar(cal.getAttribute("name"));
 		    c.SetPeriod(cal.getAttribute("hours"));
+		}
+
+//------------- DAILY ----------------------------
+		
+		cals = item.getElementsByTagName("dailycalendar");
+
+		nbcal = cals.getLength();		                    
+
+		for(int j = 0; j<nbcal; j++) 
+		{
+		    Element cal = (Element) cals.item(j);
+
+		    _logger.debug("CAL : " + cal.getAttribute("name") + " : " + cal.getAttribute("days"));
+		    
+		    DomoDailyCalendar c = new DomoDailyCalendar(cal.getAttribute("name"));
+		    c.SetPeriod(cal.getAttribute("days"));
+		}
+
+				
+//------------- WEEKLY ----------------------------
+		
+		cals = item.getElementsByTagName("weeklycalendar");
+
+		nbcal = cals.getLength();		                    
+
+		for(int j = 0; j<nbcal; j++) 
+		{
+		    Element cal = (Element) cals.item(j);
+
+		    _logger.debug("CAL : " + cal.getAttribute("name") + " : " + cal.getAttribute("weekdays"));
+		    
+		    DomoWeeklyCalendar c = new DomoWeeklyCalendar(cal.getAttribute("name"));
+		    c.SetPeriod(cal.getAttribute("weekdays"));
+		}
+		
+//------------- WEEKLY ----------------------------
+
+		cals = item.getElementsByTagName("combinedcalendar");
+
+		nbcal = cals.getLength();		                    
+
+		for(int j = 0; j<nbcal; j++) 
+		{
+		    Element cal = (Element) cals.item(j);
+
+		    _logger.debug("CAL : " + cal.getAttribute("name") + " : " + cal.getAttribute("liste"));
+		    
+		    DomoCombinedCalendar c = new DomoCombinedCalendar(cal.getAttribute("name"));
+		    c.SetPeriod(cal.getAttribute("liste"));
 		}
 		
 	}
