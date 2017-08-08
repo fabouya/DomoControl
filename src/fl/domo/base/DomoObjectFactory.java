@@ -219,6 +219,7 @@ public class DomoObjectFactory
 	
 	protected void ReloadCalendars(Element item)
 	{
+	    _logger.debug("Reload calendars");
 
 		NodeList cals = item.getElementsByTagName("hourlycalendar");
 

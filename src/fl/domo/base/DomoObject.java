@@ -24,6 +24,7 @@ public class DomoObject
 	{
 		_logger.debug("Creation : " + name);
 		_name = name.toLowerCase();
+		
 		if(null == _ht.get(_name))
 		{
 			_ht.put(_name,  this);
@@ -38,6 +39,11 @@ public class DomoObject
 	public String GetName() { return _name; }
 	
 // ---------- static function -------------
+	
+	public static Hashtable<String, DomoObject> GetAllObjects()
+	{
+		return _ht;
+	}
 	
 	public static DomoObject GetObjectByName(String name)
 	{

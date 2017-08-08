@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 
 import fl.domo.base.DomoObject;
+import fl.domo.base.DomoObjectFactory;
 import fl.domo.base.DomoSwitch;
 import fl.domo.tools.Global;
 import fl.domo.tools.Tools;
@@ -48,6 +49,11 @@ public class SimpleCommandEngine
 		if (command.equals("reload")) 
 		{
 			_logger.info("RELOAD command");
+
+			DomoObjectFactory factory = new DomoObjectFactory();
+			
+			factory.ReloadXML(Global._configFile);
+			
 			return _ok;
 		}
 
