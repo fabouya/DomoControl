@@ -5,6 +5,8 @@ import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinState;
 */
 
+import org.w3c.dom.Element;
+
 public class DomoOutputGPIO extends DomoGPIO 
 {
 	/* SANS PI4J
@@ -23,6 +25,24 @@ public class DomoOutputGPIO extends DomoGPIO
 		*/		
 	}
 	
+	public DomoOutputGPIO()
+	{		
+	}
+		
+	//--------------------------------------------------------------------------
+	
+	public void Create(String name, int pinNum)
+	{
+		super.Create(name, pinNum);
+	}
+	
+	void FromXML(Element item)
+	{
+		Create(item.getAttribute("name"), Integer.parseInt(item.getAttribute("id")));		
+	}
+
+	//--------------------------------------------------------------------------
+
 	public void SetInversedLogic(boolean logic)
 	{
 		/* SANS PI4J
@@ -38,6 +58,8 @@ public class DomoOutputGPIO extends DomoGPIO
 		}
 		*/		
 	}
+	
+	//--------------------------------------------------------------------------
 
 	public boolean IsHigh() 
 	{

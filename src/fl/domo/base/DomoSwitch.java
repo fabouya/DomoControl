@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 
 import com.pi4j.io.gpio.PinState;
 */
+import org.w3c.dom.Element;
 
 public class DomoSwitch extends DomoObject
 {
@@ -13,7 +14,7 @@ public class DomoSwitch extends DomoObject
 	protected		String			_gpioName = "undef";
 	protected		DomoOutputGPIO	_gpio = null;
 	
-	protected		int		_mode = 0;
+	protected		int				_mode = 0;
 
 	// 0 = normal/auto
 	// 1 = forced on
@@ -26,11 +27,34 @@ public class DomoSwitch extends DomoObject
 
 	public DomoSwitch(String name, String nameGPIO) 
 	{
-		super(name);
+		Create(name, nameGPIO);
+	}
+
+	public DomoSwitch() 
+	{
+		_logger.debug("Create generic DomoSwitch");
+	}
+
+	// -------------- function ----------------------------
+	
+	protected void Create(String name, String nameGPIO)
+	{		
+		super.Create(name);
 		_logger.debug("Create DomoSwitch " + name + " -> " + nameGPIO);
 		_gpioName = nameGPIO;
 		_gpio = (DomoOutputGPIO) DomoObject.GetObjectByName(nameGPIO.toLowerCase());
 	}
+	
+	void FromXML(Element item)
+	{
+		String name = item.getAttribute("name");
+		String gpio = item.getAttribute("gpioname");
+		
+	    _logger.debug("switch : " + "name" + " : " + gpio);		
+	    Create(name, gpio);
+	}
+	
+	//------------------------------------------------------
 	
 	public void InitSwitch()
 	{

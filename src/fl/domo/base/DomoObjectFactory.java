@@ -65,6 +65,65 @@ public class DomoObjectFactory
 		    		
 		    		_logger.debug(nodeType);
 		    		
+    				try 
+    				{
+    				   Class<?> clazz = Class.forName(nodeType);
+    				   Object instance = clazz.newInstance() ;
+    				   ((DomoObject)instance).FromXML((Element) racineNoeuds.item(i)) ;    				 
+    				} 
+    				catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) 
+    				{
+    				   // ERREUR si la classe n'a pas été trouvée
+    				   e.printStackTrace();
+    				}
+		    		
+		    		
+		    	}
+		    }		    
+		    
+		}
+
+		catch (ParserConfigurationException | SAXException | IOException e) 
+		{
+		    e.printStackTrace();
+		}		
+	}
+	
+	
+	public void OldBuildFromXML(String filename)
+	{
+		_logger.debug("config " + filename);
+		
+		try 
+		{
+		    DocumentBuilder builder = factory.newDocumentBuilder();
+		    
+		    Document document= builder.parse(new File(filename));
+		    
+		    _logger.debug(document.getXmlVersion() + " " + document.getXmlEncoding() + " " + document.getXmlStandalone());
+
+		    final Element racine = document.getDocumentElement();
+		    
+		    _logger.debug("Racine : " + racine.getNodeName());
+		    
+		    if(! racine.getNodeName().toLowerCase().equals("config"))
+		    {
+		    	_logger.error("Document xml invalide, la racine doit etre 'config'");
+		    	return;
+		    }
+		    
+		    NodeList racineNoeuds = racine.getChildNodes();
+
+		    int nbRacineNoeuds = racineNoeuds.getLength();            
+
+		    for (int i = 0; i<nbRacineNoeuds; i++) 
+		    {
+		    	if(Node.ELEMENT_NODE == racineNoeuds.item(i).getNodeType()) 
+		    	{
+		    		String nodeType = racineNoeuds.item(i).getNodeName(); 
+		    		
+		    		_logger.debug(nodeType);
+		    		
 		    		switch(nodeType.toLowerCase())
 		    		{
 		    			case "gpios":

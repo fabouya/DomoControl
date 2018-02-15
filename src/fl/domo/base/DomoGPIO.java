@@ -1,5 +1,7 @@
 package fl.domo.base;
 
+import org.w3c.dom.Element;
+
 /* SANS PI4J
 
 import com.pi4j.io.gpio.GpioController;
@@ -36,6 +38,17 @@ public abstract class DomoGPIO extends DomoObject
 			*/
 
 		}
+		
+		public DomoGPIO()
+		{			
+		}
+
+		public void Create(String name, int pinNum)
+		{
+			super.Create(name);
+			_pinNumber = pinNum;
+		}
+
 	// ---------- static function -------------
 		
 }

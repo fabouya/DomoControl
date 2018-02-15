@@ -6,11 +6,13 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
-public class DomoObject 
+import org.w3c.dom.Element;
+
+public abstract class DomoObject 
 {
 // -------------- members ----------------
 	
-	protected	String		_name = "undef";	
+	protected	String		_name = "undef DomoObject";	
 	
 // ---------- static members -------------
 	
@@ -25,6 +27,31 @@ public class DomoObject
 		_logger.debug("Creation : " + name);
 		_name = name.toLowerCase();
 		
+		Register(name);
+	}
+	
+	public DomoObject()
+	{
+		_logger.debug("Creation generique");
+	}
+	
+	public void Create(String name)
+	{
+		_logger.debug("Creation de DomoObject : " + name);
+		_name = name.toLowerCase();
+		
+		Register(name);
+	}
+	
+	abstract void FromXML(Element item);	
+	
+	
+	public String GetName() { return _name; }
+	
+// --------------------------------------- Private -----------------------------------------
+	
+	private void Register(String name)
+	{		
 		if(null == _ht.get(_name))
 		{
 			_ht.put(_name,  this);
@@ -33,10 +60,8 @@ public class DomoObject
 		else
 		{
 			_logger.debug("Erreur : un objet nommé " + name + " existe déjà.");			
-		}
+		}		
 	}
-	
-	public String GetName() { return _name; }
 	
 // ---------- static function -------------
 	

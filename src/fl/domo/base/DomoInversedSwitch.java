@@ -1,6 +1,7 @@
 package fl.domo.base;
 
 import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
 
 public class DomoInversedSwitch extends DomoSwitch {
 
@@ -13,10 +14,24 @@ public class DomoInversedSwitch extends DomoSwitch {
 
 	public DomoInversedSwitch(String name, String nameGPIO) 
 	{
-		super(name, nameGPIO);
 		_logger.debug("Create DomoInversedSwitch " + name + " -> " + nameGPIO);		
+		super.Create(name, nameGPIO);
+	}
+	
+	public DomoInversedSwitch() 
+	{
+	}	
+
+	void FromXML(Element item)
+	{
+		String name = item.getAttribute("name");
+		String gpio = item.getAttribute("gpioname");
+		
+		_logger.debug("Create DomoInversedSwitch " + name + " -> " + gpio);		
+	    Create(name, gpio);
 	}
 
+	
 	@Override
 	public void InitSwitch()
 	{

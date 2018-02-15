@@ -1,6 +1,7 @@
 package fl.domo.base;
 
 import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
 
 public class ScheduledSwitch extends DomoScheduledObject 
 {
@@ -17,9 +18,23 @@ public class ScheduledSwitch extends DomoScheduledObject
 
 	public ScheduledSwitch(String name, String calendarName, String switchname) 
 	{
-		super(name, calendarName);
+			Create(name, calendarName, switchname);
+	}
+	
+	public ScheduledSwitch()
+	{
+		
+	}
+	
+
+	// -------------- function ----------------------------
+	
+	protected void Create(String name, String calendarName, String switchname)
+	{		
+		super.Create(name, calendarName);
 		_switchName = switchname;
 		_switchObject = (DomoSwitch) DomoObject.GetObjectByName(_switchName);
+		
 		try
 		{
 			_switchObject.SwitchOFF();
@@ -29,7 +44,14 @@ public class ScheduledSwitch extends DomoScheduledObject
 			_logger.error("Erreur de creation de <" + name +"> <" + calendarName + "> <" + switchname + ">");
 		}
 	}
-
+	
+	void FromXML(Element item)
+	{
+	}
+	
+	
+    //----------------------------------------------------------	
+	
 	@Override
 	public void Step() 
 	{

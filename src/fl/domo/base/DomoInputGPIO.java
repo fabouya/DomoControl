@@ -4,6 +4,8 @@ package fl.domo.base;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 */
 
+import org.w3c.dom.Element;
+
 public class DomoInputGPIO extends DomoGPIO 
 {
 	/* SANS PI4J
@@ -20,5 +22,25 @@ public class DomoInputGPIO extends DomoGPIO
 		*/			
 
 	}
+
+	public DomoInputGPIO()
+	{
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	
+	public void Create(String name, int pinNum)
+	{
+		super.Create(name, pinNum);
+	}
+	
+	void FromXML(Element item)
+	{
+		Create(item.getAttribute("name"), Integer.parseInt(item.getAttribute("id")));		
+	}
+
+	//--------------------------------------------------------------------------
+
 
 }
