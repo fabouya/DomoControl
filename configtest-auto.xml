@@ -7,12 +7,16 @@
 	<fl.domo.base.DomoOutputGPIO name="robotgpio" id="8"  />
 	<fl.domo.base.DomoOutputGPIO name="lumieregpio" id="9" />
 
-	<fl.domo.base.DomoSwitch name="pompeswitch" gpioname="pompegpio"/>
+	<fl.domo.base.DomoInversedSwitch name="pompeswitch" gpioname="pompegpio"/>
 	<fl.domo.base.DomoInversedSwitch name="robotswitch" gpioname="robotgpio"/>
 	<fl.domo.base.DomoInversedSwitch name="lumiereswitch" gpioname="lumieregpio"/>
 	
 	<fl.domo.base.DomoHourlyCalendar name="pompecal" hours="7,8,9,10,11,12,13,14,15,16,17,18"/>	
-	<fl.domo.base.DomoHourlyCalendar name="robotcal" hours="8,9"/>
+	<fl.domo.base.DomoHourlyCalendar name="robotcal" hours="8,9,12,14"/>
 	<fl.domo.base.DomoHourlyCalendar name="lumierecal" hours="22,23,0"/>
+	
+	<fl.domo.base.ScheduledSwitch name="pompe" switch="pompeswitch" calendar="pompecal"/>
+	<fl.domo.base.ScheduledSwitch name="robot" switch="robotswitch" calendar="robotcal"/>
+	<fl.domo.base.ScheduledSwitch name="lumiere" switch="lumiereswitch" calendar="lumierecal"/>	
 	
 </config>

@@ -1,5 +1,6 @@
 package fl.domo.base;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
 /* SANS PI4J
@@ -27,6 +28,8 @@ public abstract class DomoGPIO extends DomoObject
 	final static protected GpioController _gpioControler = GpioFactory.getInstance();
 	*/
 	
+	protected final static Logger _logger = Logger.getLogger(DomoGPIO.class);
+			
 	// -------------- function ----------------
 
 		public DomoGPIO(String name, int pinNum)
@@ -36,17 +39,21 @@ public abstract class DomoGPIO extends DomoObject
 			/* SANS PI4J
 			_gpioPin = RaspiPin.getPinByAddress(pinNum);
 			*/
+			_logger.debug("Create DomoGPIO : " + name +" Pin : " + pinNum);
 
 		}
 		
 		public DomoGPIO()
 		{			
+			_logger.debug("Create generic DomoGPIO");
 		}
 
 		public void Create(String name, int pinNum)
 		{
 			super.Create(name);
 			_pinNumber = pinNum;
+			
+			_logger.debug("Create DomoGPIO : " + name +" Pin : " + pinNum);
 		}
 
 	// ---------- static function -------------

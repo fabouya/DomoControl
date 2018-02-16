@@ -45,6 +45,7 @@ public class DomoSwitch extends DomoObject
 		_gpio = (DomoOutputGPIO) DomoObject.GetObjectByName(nameGPIO.toLowerCase());
 	}
 	
+	@Override
 	void FromXML(Element item)
 	{
 		String name = item.getAttribute("name");

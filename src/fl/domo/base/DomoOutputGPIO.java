@@ -36,6 +36,7 @@ public class DomoOutputGPIO extends DomoGPIO
 		super.Create(name, pinNum);
 	}
 	
+	@Override
 	void FromXML(Element item)
 	{
 		Create(item.getAttribute("name"), Integer.parseInt(item.getAttribute("id")));		

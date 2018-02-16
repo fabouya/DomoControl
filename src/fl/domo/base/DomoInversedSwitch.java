@@ -21,7 +21,8 @@ public class DomoInversedSwitch extends DomoSwitch {
 	public DomoInversedSwitch() 
 	{
 	}	
-
+	
+	@Override
 	void FromXML(Element item)
 	{
 		String name = item.getAttribute("name");
@@ -42,12 +43,14 @@ public class DomoInversedSwitch extends DomoSwitch {
 	@Override
 	public void SwitchON()
 	{
+		_logger.debug("InversedSwitch SwitchOn : " + _name);
 		super.SwitchOFF();
 	}
 
 	@Override
 	public void SwitchOFF()
 	{
+		_logger.debug("InversedSwitch SwitchOff : " + _name);
 		super.SwitchON();
 	}
 	

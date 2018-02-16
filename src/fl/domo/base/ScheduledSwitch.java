@@ -45,8 +45,10 @@ public class ScheduledSwitch extends DomoScheduledObject
 		}
 	}
 	
+	@Override
 	void FromXML(Element item)
 	{
+	    Create(item.getAttribute("name"), item.getAttribute("calendar"), item.getAttribute("switch"));		
 	}
 	
 	

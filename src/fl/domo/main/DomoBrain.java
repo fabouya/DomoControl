@@ -119,12 +119,14 @@ public class DomoBrain
 
 //1
 		// Lire les properties
+		_logger.info("Lecture des propriétés ----------------------------------------------");
 		ReadProperties(Global._propFile);
 		
 //2
 		// Lire de fichier xml de declaration des objets
 		DomoObjectFactory factory = new DomoObjectFactory();
 		
+		_logger.info("Lecture de la configuration -----------------------------------------");
 		factory.BuildFromXML(Global._configFile);
 		
 //3

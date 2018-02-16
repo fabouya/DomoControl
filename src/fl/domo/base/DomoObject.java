@@ -32,12 +32,12 @@ public abstract class DomoObject
 	
 	public DomoObject()
 	{
-		_logger.debug("Creation generique");
+		_logger.debug("Creation generique DomoObject");
 	}
 	
 	public void Create(String name)
 	{
-		_logger.debug("Creation de DomoObject : " + name);
+		_logger.debug("Create de DomoObject : " + name);
 		_name = name.toLowerCase();
 		
 		Register(name);

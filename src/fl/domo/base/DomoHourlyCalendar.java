@@ -35,6 +35,7 @@ public class DomoHourlyCalendar extends DomoCalendar
 		SetPeriod(hours);
 	}
 	
+	@Override
 	void FromXML(Element item)
 	{
 		String name = item.getAttribute("name");
