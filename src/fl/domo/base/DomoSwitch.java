@@ -1,16 +1,20 @@
 package fl.domo.base;
 
 import org.apache.log4j.Logger;
+/* SANS PI4J
+
+import com.pi4j.io.gpio.PinState;
+*/
+import org.w3c.dom.Element;
 
 public class DomoSwitch extends DomoObject
 {
 	// -------------- members ----------------
 	
-	protected		int			_state=-1;	// -1 = undef, 0 = off, 1 = on
-	protected		String		_gpioName = "undef";
-	protected		DomoGPIO	_gpio = null;
+	protected		String			_gpioName = "undef";
+	protected		DomoOutputGPIO	_gpio = null;
 	
-	protected		int		_mode = 0;
+	protected		int				_mode = 0;
 
 	// 0 = normal/auto
 	// 1 = forced on
@@ -23,39 +27,60 @@ public class DomoSwitch extends DomoObject
 
 	public DomoSwitch(String name, String nameGPIO) 
 	{
-		super(name);
+		Create(name, nameGPIO);
+	}
+
+	public DomoSwitch() 
+	{
+		_logger.debug("Create generic DomoSwitch");
+	}
+
+	// -------------- function ----------------------------
+	
+	protected void Create(String name, String nameGPIO)
+	{		
+		super.Create(name);
 		_logger.debug("Create DomoSwitch " + name + " -> " + nameGPIO);
 		_gpioName = nameGPIO;
-		_gpio = (DomoGPIO) DomoObject.GetObjectByName(nameGPIO.toLowerCase());
+		_gpio = (DomoOutputGPIO) DomoObject.GetObjectByName(nameGPIO.toLowerCase());
+	}
+	
+	@Override
+	void FromXML(Element item)
+	{
+		String name = item.getAttribute("name");
+		String gpio = item.getAttribute("gpioname");
+		
+	    _logger.debug("switch : " + "name" + " : " + gpio);		
+	    Create(name, gpio);
+	}
+	
+	//------------------------------------------------------
+	
+	public void InitSwitch()
+	{
+		_gpio.SetLow();		
 	}
 	
 	public void SwitchON()
 	{
-		_state = 1;
-		// gpio.high
+		_gpio.SetHigh();
 	}
 
 	public void SwitchOFF()
 	{
-		_state = 0;
-		// gpio.low
+		_gpio.SetLow();
 	}
+	
 	
 	public boolean IsON()
 	{
-		return (1 == GetState()) ? true : false;
+		return _gpio.IsHigh();
 	}
 	
-	public boolean IsUnknownState()
+	public boolean IsOFF()
 	{
-		return (-1 == GetState()) ? true : false;
-	}
-	
-	
-	public int GetState()
-	{
-		// read gpio
-		return _state;
+		return _gpio.IsLow();
 	}
 
 	public String SetMode(String s)
@@ -81,9 +106,17 @@ public class DomoSwitch extends DomoObject
 	
 	public int GetMode()
 	{
-		return _mode;
+ 		return _mode;
 	}
-	
+
+ 	public int GetState()
+ 	{
+		if(IsON())
+			return 1;
+		else
+			return 0;
+ 	}
+ 	
 	public static String ModeToString(int mode)
 	{
 		switch(mode)

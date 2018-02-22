@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import org.apache.log4j.Logger;
+
 public class DomoWeeklyCalendar extends DomoCalendar 
 {
 
@@ -12,6 +14,8 @@ public class DomoWeeklyCalendar extends DomoCalendar
 	protected int _tabJourSemaine[] = new int[8];
 	
 	// ---------- static members -------------
+	
+	private static Logger _logger = Logger.getLogger(DomoWeeklyCalendar.class);
 				
 	// -------------- function ----------------
 
@@ -25,7 +29,7 @@ public class DomoWeeklyCalendar extends DomoCalendar
 	@Override
 	public void SetPeriod(String period)
 	{
-		_logger.debug("Addperiod " + period);
+		_logger.debug("Set period " + period);
 		// periode de la forme "h1, h2, h3, ..."
 		// 1 = lundi, 2 = mardi, ..., 7 = dimanche
 		String[] parts = period.split(",");

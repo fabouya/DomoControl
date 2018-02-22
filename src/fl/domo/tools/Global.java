@@ -12,5 +12,7 @@ public class Global
 	public static boolean			_schedulerEnabled = true;
 	public static boolean			_jmsEnabled = true;
 	public static boolean			_tcpEnabled = true;
+	public static String			_propFile = "";
+	public static String			_configFile = "";
 	
 }

@@ -1,5 +1,7 @@
 package fl.domo.base;
 
+import org.w3c.dom.Element;
+
 public abstract class DomoScheduledObject extends DomoObject 
 {
 	// -------------- members ----------------
@@ -14,10 +16,28 @@ public abstract class DomoScheduledObject extends DomoObject
 	public DomoScheduledObject(String name, String calendarname) 
 	{
 		super(name);
-		_calendarName = calendarname;
-		_calendarObject = (DomoCalendar) DomoObject.GetObjectByName(_calendarName);
+		Create(name, calendarname);
 
 	}
+
+	public DomoScheduledObject()
+	{
+		
+	}
+	// -------------- function ----------------------------
+	
+	
+	protected void Create(String name, String calendarName)
+	{	
+		super.Create(name);
+		_calendarName = calendarName;
+		_calendarObject = (DomoCalendar) DomoObject.GetObjectByName(_calendarName);
+	}
+	
+	void FromXML(Element item)
+	{
+	}
+	
 	
 	public String GetCalendarName() { return _calendarName; }
 	public DomoCalendar GetCalendarObject() { return _calendarObject; }

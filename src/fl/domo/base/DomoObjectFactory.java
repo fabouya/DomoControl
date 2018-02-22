@@ -65,6 +65,65 @@ public class DomoObjectFactory
 		    		
 		    		_logger.debug(nodeType);
 		    		
+    				try 
+    				{
+    				   Class<?> clazz = Class.forName(nodeType);
+    				   Object instance = clazz.newInstance() ;
+    				   ((DomoObject)instance).FromXML((Element) racineNoeuds.item(i)) ;    				 
+    				} 
+    				catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) 
+    				{
+    				   // ERREUR si la classe n'a pas été trouvée
+    				   e.printStackTrace();
+    				}
+		    		
+		    		
+		    	}
+		    }		    
+		    
+		}
+
+		catch (ParserConfigurationException | SAXException | IOException e) 
+		{
+		    e.printStackTrace();
+		}		
+	}
+	
+	
+	public void OldBuildFromXML(String filename)
+	{
+		_logger.debug("config " + filename);
+		
+		try 
+		{
+		    DocumentBuilder builder = factory.newDocumentBuilder();
+		    
+		    Document document= builder.parse(new File(filename));
+		    
+		    _logger.debug(document.getXmlVersion() + " " + document.getXmlEncoding() + " " + document.getXmlStandalone());
+
+		    final Element racine = document.getDocumentElement();
+		    
+		    _logger.debug("Racine : " + racine.getNodeName());
+		    
+		    if(! racine.getNodeName().toLowerCase().equals("config"))
+		    {
+		    	_logger.error("Document xml invalide, la racine doit etre 'config'");
+		    	return;
+		    }
+		    
+		    NodeList racineNoeuds = racine.getChildNodes();
+
+		    int nbRacineNoeuds = racineNoeuds.getLength();            
+
+		    for (int i = 0; i<nbRacineNoeuds; i++) 
+		    {
+		    	if(Node.ELEMENT_NODE == racineNoeuds.item(i).getNodeType()) 
+		    	{
+		    		String nodeType = racineNoeuds.item(i).getNodeName(); 
+		    		
+		    		_logger.debug(nodeType);
+		    		
 		    		switch(nodeType.toLowerCase())
 		    		{
 		    			case "gpios":
@@ -117,10 +176,31 @@ public class DomoObjectFactory
 		for(int j = 0; j<nbgpios; j++) 
 		{
 		    Element gpio = (Element) gpios.item(j);
+		    String typeGpio = gpio.getAttribute("type");
 
-		    _logger.debug("GPIO : " + gpio.getAttribute("name") + " : " + gpio.getAttribute("id"));
+		    _logger.debug("GPIO : " + gpio.getAttribute("name") + " : " + gpio.getAttribute("id") + ":"  + typeGpio);
 		    
-		    new DomoGPIO(gpio.getAttribute("name"), Integer.parseInt(gpio.getAttribute("id")));
+		    
+		    switch(typeGpio.toLowerCase())
+		    {
+		    	case "output":
+		    	{
+				    new DomoOutputGPIO(gpio.getAttribute("name"), Integer.parseInt(gpio.getAttribute("id")));		    		
+		    	}
+		    	break;
+		    	
+		    	case "input":
+		    	{
+				    new DomoInputGPIO(gpio.getAttribute("name"), Integer.parseInt(gpio.getAttribute("id")));		    		
+		    	}
+		    	break;
+		    	
+		    	default:
+		    	{
+		    		_logger.debug("GPIO : " + gpio.getAttribute("name") + " : " + typeGpio + " : type inconnu");		    		
+		    	}
+		    }
+		    
 		}
 		
 	}
@@ -141,7 +221,8 @@ public class DomoObjectFactory
 
 		    _logger.debug("switch : " + sw.getAttribute("name") + " : " + sw.getAttribute("gpioname"));
 		    
-		    new DomoSwitch(sw.getAttribute("name"), sw.getAttribute("gpioname"));
+		    DomoSwitch s = new DomoSwitch(sw.getAttribute("name"), sw.getAttribute("gpioname"));
+		    s.InitSwitch();
 
 		}
 		
@@ -151,14 +232,17 @@ public class DomoObjectFactory
 
 		    _logger.debug("inverse switch : " + isw.getAttribute("name") + " : " + isw.getAttribute("gpioname"));
 
-		    new DomoInversedSwitch(isw.getAttribute("name"), isw.getAttribute("gpioname"));
+		    DomoInversedSwitch s = new DomoInversedSwitch(isw.getAttribute("name"), isw.getAttribute("gpioname"));
+		    s.InitSwitch();
 		}
 		
 	}
-
+	
 	protected void ParseCalendars(Element item)
 	{
 
+//------------- HOURLY ----------------------------		
+		
 		NodeList cals = item.getElementsByTagName("hourlycalendar");
 
 		int nbcal = cals.getLength();		                    
@@ -171,6 +255,55 @@ public class DomoObjectFactory
 		    
 		    DomoHourlyCalendar c = new DomoHourlyCalendar(cal.getAttribute("name"));
 		    c.SetPeriod(cal.getAttribute("hours"));
+		}
+
+//------------- DAILY ----------------------------
+		
+		cals = item.getElementsByTagName("dailycalendar");
+
+		nbcal = cals.getLength();		                    
+
+		for(int j = 0; j<nbcal; j++) 
+		{
+		    Element cal = (Element) cals.item(j);
+
+		    _logger.debug("CAL : " + cal.getAttribute("name") + " : " + cal.getAttribute("days"));
+		    
+		    DomoDailyCalendar c = new DomoDailyCalendar(cal.getAttribute("name"));
+		    c.SetPeriod(cal.getAttribute("days"));
+		}
+
+				
+//------------- WEEKLY ----------------------------
+		
+		cals = item.getElementsByTagName("weeklycalendar");
+
+		nbcal = cals.getLength();		                    
+
+		for(int j = 0; j<nbcal; j++) 
+		{
+		    Element cal = (Element) cals.item(j);
+
+		    _logger.debug("CAL : " + cal.getAttribute("name") + " : " + cal.getAttribute("weekdays"));
+		    
+		    DomoWeeklyCalendar c = new DomoWeeklyCalendar(cal.getAttribute("name"));
+		    c.SetPeriod(cal.getAttribute("weekdays"));
+		}
+		
+//------------- WEEKLY ----------------------------
+
+		cals = item.getElementsByTagName("combinedcalendar");
+
+		nbcal = cals.getLength();		                    
+
+		for(int j = 0; j<nbcal; j++) 
+		{
+		    Element cal = (Element) cals.item(j);
+
+		    _logger.debug("CAL : " + cal.getAttribute("name") + " : " + cal.getAttribute("liste"));
+		    
+		    DomoCombinedCalendar c = new DomoCombinedCalendar(cal.getAttribute("name"));
+		    c.SetPeriod(cal.getAttribute("liste"));
 		}
 		
 	}
@@ -193,6 +326,102 @@ public class DomoObjectFactory
 		
 	}
 	
+	
+	protected void ReloadCalendars(Element item)
+	{
+	    _logger.debug("Reload calendars");
+
+		NodeList cals = item.getElementsByTagName("hourlycalendar");
+
+		int nbcal = cals.getLength();		                    
+
+		for(int j = 0; j<nbcal; j++) 
+		{
+		    Element cal = (Element) cals.item(j);
+		    
+		    String name = cal.getAttribute("name");
+		    
+		    DomoObject o = DomoObject.GetObjectByName(name);
+		    
+		    if(null != o)
+		    {
+		    	((DomoHourlyCalendar) o).SetPeriod(cal.getAttribute("hours"));
+		    }
+		    else
+		    {
+			    DomoHourlyCalendar c = new DomoHourlyCalendar(cal.getAttribute("name"));
+			    c.SetPeriod(cal.getAttribute("hours"));		    	
+		    }
+		}
+		
+	}
+
+	
+	public void ReloadXML(String filename)
+	{
+		_logger.debug("Reload config " + filename);
+		
+		try 
+		{
+		    DocumentBuilder builder = factory.newDocumentBuilder();
+		    
+		    Document document= builder.parse(new File(filename));
+		    
+		    _logger.debug(document.getXmlVersion() + " " + document.getXmlEncoding() + " " + document.getXmlStandalone());
+
+		    final Element racine = document.getDocumentElement();
+		    
+		    _logger.debug("Racine : " + racine.getNodeName());
+		    
+		    if(! racine.getNodeName().toLowerCase().equals("config"))
+		    {
+		    	_logger.error("Document xml invalide, la racine doit etre 'config'");
+		    	return;
+		    }
+		    
+		    NodeList racineNoeuds = racine.getChildNodes();
+
+		    int nbRacineNoeuds = racineNoeuds.getLength();            
+
+		    for (int i = 0; i<nbRacineNoeuds; i++) 
+		    {
+		    	if(Node.ELEMENT_NODE == racineNoeuds.item(i).getNodeType()) 
+		    	{
+		    		String nodeType = racineNoeuds.item(i).getNodeName(); 
+		    		
+		    		_logger.debug(nodeType);
+		    		
+		    		switch(nodeType.toLowerCase())
+		    		{
+		    			case "gpios":
+		    			case "switchs":
+		    			case "scheduledswitchs":
+		    			{
+		    				_logger.info("Type ignoré pendant reload : " + nodeType.toLowerCase());
+		    			}
+		    			break;
+		    			
+		    			case "calendars":
+		    			{
+		    				ReloadCalendars((Element) racineNoeuds.item(i));
+		    			}
+		    			break;
+		    			
+		    			default:
+		    			{
+		    				_logger.error("Noeud de type inconnu : " + nodeType);
+		    			}
+		    		}
+		    	}
+		    }		    
+		    
+		}
+
+		catch (ParserConfigurationException | SAXException | IOException e) 
+		{
+		    e.printStackTrace();
+		}		
+	}
 	
 	// ---------- static function -------------
 }

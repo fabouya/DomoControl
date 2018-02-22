@@ -5,6 +5,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.apache.log4j.Logger;
 
 import fl.domo.base.DomoObjectFactory;
@@ -59,20 +65,69 @@ public class DomoBrain
 			}
 		}		
 	}
+	
+	private static void DoParseOptions(String[] args)
+	{
+		// create Options object
+		Options options = new Options();
+		
+		Option  Oprop = Option.builder("p")
+						.hasArg()
+						.longOpt("prop")
+						.required()
+						.argName("prop")
+						.build();
+		
+		options.addOption(Oprop);
+
+		Option  Oconf = Option.builder("c")
+				.hasArg()
+				.longOpt("config")
+				.required()
+				.argName("config")
+				.build();
+
+		options.addOption(Oconf);
+		
+		CommandLineParser parser = new DefaultParser();
+		
+		try 
+		{
+			CommandLine cmd = parser.parse( options, args);
+						
+			Global._propFile = cmd.getOptionValue("prop");
+			_logger.info("propfile : " + Global._propFile);
+
+			
+			Global._configFile = cmd.getOptionValue("config");
+			_logger.info("Config : " + Global._configFile);
+			
+		} catch (ParseException e) 
+		{
+			// TODO Auto-generated catch block
+			_logger.error(e.getMessage());
+			System.exit(1);
+		}						
+	}
+	
 
 	public static void main(String[] args) 
 	{
 		// TODO Auto-generated method stub
+		
+		DoParseOptions(args);		
 
 //1
 		// Lire les properties
-		ReadProperties("domo.properties");
+		_logger.info("Lecture des propriétés ----------------------------------------------");
+		ReadProperties(Global._propFile);
 		
 //2
 		// Lire de fichier xml de declaration des objets
 		DomoObjectFactory factory = new DomoObjectFactory();
 		
-		factory.BuildFromXML("configtest.xml");
+		_logger.info("Lecture de la configuration -----------------------------------------");
+		factory.BuildFromXML(Global._configFile);
 		
 //3
 		SchedulerThread scheduler = null;

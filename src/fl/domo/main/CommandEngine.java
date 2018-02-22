@@ -7,6 +7,7 @@ import org.json.simple.parser.JSONParser;
 
 import fl.domo.base.BasicCommands;
 import fl.domo.base.DomoObject;
+import fl.domo.base.DomoObjectFactory;
 import fl.domo.tools.Global;
 
 public class CommandEngine
@@ -211,11 +212,13 @@ public class CommandEngine
 		protected String Reload(JSONObject command)
 		{
 			_logger.debug("command : RELOAD");
-			JSONObject jsonErr = BuilJSONError("Commande reload non implementee");
+			DomoObjectFactory factory = new DomoObjectFactory();
 			
-//			JSONObject obj = BuilJSONSuccess();
+			factory.ReloadXML(Global._configFile);
+					
+			JSONObject obj = BuilJSONSuccess();
 			
-			return jsonErr.toJSONString();
+			return obj.toJSONString();
 		}
 
 	//+++++++++++++++++++++++++ STOP +++++++++++++++++++++++++++++++

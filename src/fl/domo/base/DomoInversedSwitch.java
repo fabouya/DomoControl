@@ -1,33 +1,70 @@
 package fl.domo.base;
 
+import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
+
 public class DomoInversedSwitch extends DomoSwitch {
 
 	// -------------- members ----------------
 	
 	// ---------- static members -------------
-				
+	protected final static Logger _logger = Logger.getLogger(DomoInversedSwitch.class);	
+
 	// -------------- function ----------------
 
 	public DomoInversedSwitch(String name, String nameGPIO) 
 	{
-		super(name, nameGPIO);
-		// TODO Auto-generated constructor stub
+		_logger.debug("Create DomoInversedSwitch " + name + " -> " + nameGPIO);		
+		super.Create(name, nameGPIO);
+	}
+	
+	public DomoInversedSwitch() 
+	{
+	}	
+	
+	@Override
+	void FromXML(Element item)
+	{
+		String name = item.getAttribute("name");
+		String gpio = item.getAttribute("gpioname");
+		
+		_logger.debug("Create DomoInversedSwitch " + name + " -> " + gpio);		
+	    Create(name, gpio);
 	}
 
+	
+	@Override
+	public void InitSwitch()
+	{
+		_gpio.SetInversedLogic(true);
+		_gpio.SetHigh();		
+	}
+
+	@Override
 	public void SwitchON()
 	{
+		_logger.debug("InversedSwitch SwitchOn : " + _name);
 		super.SwitchOFF();
 	}
 
+	@Override
 	public void SwitchOFF()
 	{
+		_logger.debug("InversedSwitch SwitchOff : " + _name);
 		super.SwitchON();
 	}
 	
-	public int GetState()
+	@Override
+	public boolean IsON()
 	{
-		// read gpio
-		return ( super.GetState() == 0) ? 1 : 0;
+		return ! super.IsON();
 	}
 	
+	@Override
+	public boolean IsOFF()
+	{
+		return ! super.IsOFF();
+	}
+	
+		
 }

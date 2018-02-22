@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
 
 public class DomoHourlyCalendar extends DomoCalendar 
 {
@@ -22,13 +23,40 @@ public class DomoHourlyCalendar extends DomoCalendar
 	{
 		super(name);
 	}
+	
+	public DomoHourlyCalendar() 
+	{
+	}
+	
+	public void Create(String name, String hours)
+	{
+	    _logger.debug("Create DomoHourlyCalendar");		
+		super.Create(name);
+		SetPeriod(hours);
+	}
+	
+	@Override
+	void FromXML(Element item)
+	{
+		String name = item.getAttribute("name");
+		String hours = item.getAttribute("hours");
+		
+	    _logger.debug("CAL : " + name + " : " + hours);
+	    
+	    Create(name, hours);		
+	}
+	
+	//---------------------------------------------
 
 	@Override
 	public void SetPeriod(String period)
 	{
-		_logger.debug("Addperiod " + period);
+		_logger.debug("Set period " + period);
 		// periode de la forme "h1, h2, h3, ..."
 		String[] parts = period.split(",");
+		
+		for(int h=0; h < 24; h++)
+			_tabHeures[h] = 0;
 		
 		for(int i=0; i < parts.length; i++)
 		{
