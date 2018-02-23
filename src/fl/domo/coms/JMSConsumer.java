@@ -107,7 +107,7 @@ public class JMSConsumer implements MessageListener
     {
         try 
         {
-        	_logger.debug("Reception message");
+        	_logger.debug("+++++++++++++++++++++ Reception message +++++++++++++++++++++++++");
             TextMessage response = _session.createTextMessage();
             if (message instanceof TextMessage) 
             {
@@ -123,7 +123,11 @@ public class JMSConsumer implements MessageListener
  
             //Send the response to the Destination specified by the JMSReplyTo field of the received message,
             //this is presumably a temporary queue created by the client
-            _replyProducer.send(message.getJMSReplyTo(), response);
+            
+            if(message.getJMSReplyTo() != null)
+            {
+            	_replyProducer.send(message.getJMSReplyTo(), response);
+            }
         } 
         catch (JMSException e) 
         {

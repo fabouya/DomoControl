@@ -66,12 +66,10 @@ public class CommandEngine
 			switch(command.toUpperCase())
 			{
 				case "STATUS":
-					return Status(jsonObject);
-				
+					return Status(jsonObject);				
 				
 				case "MODE":
-					return Mode(jsonObject);
-				
+					return Mode(jsonObject);				
 				
 				case "SET":
 					return Set(jsonObject);
@@ -81,8 +79,7 @@ public class CommandEngine
 
 				case "RELOAD":
 					return Reload(jsonObject);
-				
-					
+									
 				case "STOP":
 					jsonobj = Stop(jsonObject);
 				break;

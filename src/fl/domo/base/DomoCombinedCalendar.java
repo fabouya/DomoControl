@@ -3,6 +3,7 @@ package fl.domo.base;
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
 
 public class DomoCombinedCalendar extends DomoCalendar 
 {
@@ -73,6 +74,12 @@ public class DomoCombinedCalendar extends DomoCalendar
 
 	@Override
 	public void Reload() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	void ReloadFromXML(Element item) {
 		// TODO Auto-generated method stub
 		
 	}

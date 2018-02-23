@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
 
 public class DomoWeeklyCalendar extends DomoCalendar 
 {
@@ -59,6 +60,12 @@ public class DomoWeeklyCalendar extends DomoCalendar
 
 	@Override
 	public void Reload() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	void ReloadFromXML(Element item) {
 		// TODO Auto-generated method stub
 		
 	}

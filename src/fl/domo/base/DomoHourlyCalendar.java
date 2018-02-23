@@ -46,6 +46,19 @@ public class DomoHourlyCalendar extends DomoCalendar
 	    Create(name, hours);		
 	}
 	
+	@Override
+	public void Reload() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	void ReloadFromXML(Element item) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
 	//---------------------------------------------
 
 	@Override
@@ -80,11 +93,6 @@ public class DomoHourlyCalendar extends DomoCalendar
 		return (_tabHeures[Integer.parseInt(h)] == 1 ? true : false);
 	}
 
-	@Override
-	public void Reload() {
-		// TODO Auto-generated method stub
-		
-	}
 
 	// ---------- static function -------------
 

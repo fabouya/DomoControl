@@ -42,6 +42,13 @@ public class DomoOutputGPIO extends DomoGPIO
 		Create(item.getAttribute("name"), Integer.parseInt(item.getAttribute("id")));		
 	}
 
+	@Override
+	void ReloadFromXML(Element item) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
 	//--------------------------------------------------------------------------
 
 	public void SetInversedLogic(boolean logic)

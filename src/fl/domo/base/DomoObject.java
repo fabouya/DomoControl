@@ -43,7 +43,8 @@ public abstract class DomoObject
 		Register(name);
 	}
 	
-	abstract void FromXML(Element item);	
+	abstract void FromXML(Element item);
+	abstract void ReloadFromXML(Element item);
 	
 	
 	public String GetName() { return _name; }

@@ -28,23 +28,38 @@ public class SchedulerThread extends DomoThread
 		{
 			_logger.info("Starting SchedulerThread " + _name);
 
+			ArrayList<DomoObject> scheduledItems = DomoObject.GetObjectsByClass("fl.domo.base.DomoScheduledObject");
+			
 			while (false == Global._quitFlag) 
 			{
-				ArrayList<DomoObject> scheduledItems = DomoObject.GetObjectsByClass("fl.domo.base.DomoScheduledObject");
-				
-				for(DomoObject item : scheduledItems)
+				try 
 				{
-					((DomoScheduledObject) item).Step();
+					scheduledItems = DomoObject.GetObjectsByClass("fl.domo.base.DomoScheduledObject");
+					
+					for(DomoObject item : scheduledItems)
+					{
+						((DomoScheduledObject) item).Step();
+					}
+	
+					sleep(Global._scheduleSleep);
 				}
-
-				sleep(Global._scheduleSleep);				
+				catch (InterruptedException ex)
+				{
+					Thread.currentThread().interrupt(); // Très important de réinterrompre
+					break;
+				}
 			}
+
 			
-		} 
+		}
 		catch (Exception e) 
 		{
 			e.printStackTrace();
 		}
+		
+		_logger.info("Stopping thread " + _name);
+		
 	}
+
 
 }

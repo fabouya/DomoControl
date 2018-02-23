@@ -31,6 +31,13 @@ public class DomoInversedSwitch extends DomoSwitch {
 		_logger.debug("Create DomoInversedSwitch " + name + " -> " + gpio);		
 	    Create(name, gpio);
 	}
+	
+	@Override
+	void ReloadFromXML(Element item) 
+	{
+		FromXML(item);
+	}
+
 
 	
 	@Override

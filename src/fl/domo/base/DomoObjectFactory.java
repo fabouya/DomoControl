@@ -89,8 +89,8 @@ public class DomoObjectFactory
 		}		
 	}
 	
-	
-	public void OldBuildFromXML(String filename)
+/*	
+	public void OldBuildFromXMLnotused(String filename)
 	{
 		_logger.debug("config " + filename);
 		
@@ -165,7 +165,9 @@ public class DomoObjectFactory
 		    e.printStackTrace();
 		}		
 	}
-
+*/
+	
+	/*
 	protected void ParseGPIOS(Element item)
 	{
 
@@ -237,6 +239,7 @@ public class DomoObjectFactory
 		}
 		
 	}
+*/
 	
 	protected void ParseCalendars(Element item)
 	{
@@ -308,6 +311,8 @@ public class DomoObjectFactory
 		
 	}
 	
+/*	
+	
 	protected void ParseScheduledSwitch(Element item)
 	{
 
@@ -325,7 +330,7 @@ public class DomoObjectFactory
 		}
 		
 	}
-	
+*/	
 	
 	protected void ReloadCalendars(Element item)
 	{
@@ -361,66 +366,14 @@ public class DomoObjectFactory
 	{
 		_logger.debug("Reload config " + filename);
 		
-		try 
-		{
-		    DocumentBuilder builder = factory.newDocumentBuilder();
-		    
-		    Document document= builder.parse(new File(filename));
-		    
-		    _logger.debug(document.getXmlVersion() + " " + document.getXmlEncoding() + " " + document.getXmlStandalone());
+		// stop les autres thread
+		// vide la configuration
+		// relit tout
+		
+		BuildFromXML(filename);
 
-		    final Element racine = document.getDocumentElement();
-		    
-		    _logger.debug("Racine : " + racine.getNodeName());
-		    
-		    if(! racine.getNodeName().toLowerCase().equals("config"))
-		    {
-		    	_logger.error("Document xml invalide, la racine doit etre 'config'");
-		    	return;
-		    }
-		    
-		    NodeList racineNoeuds = racine.getChildNodes();
-
-		    int nbRacineNoeuds = racineNoeuds.getLength();            
-
-		    for (int i = 0; i<nbRacineNoeuds; i++) 
-		    {
-		    	if(Node.ELEMENT_NODE == racineNoeuds.item(i).getNodeType()) 
-		    	{
-		    		String nodeType = racineNoeuds.item(i).getNodeName(); 
-		    		
-		    		_logger.debug(nodeType);
-		    		
-		    		switch(nodeType.toLowerCase())
-		    		{
-		    			case "gpios":
-		    			case "switchs":
-		    			case "scheduledswitchs":
-		    			{
-		    				_logger.info("Type ignoré pendant reload : " + nodeType.toLowerCase());
-		    			}
-		    			break;
-		    			
-		    			case "calendars":
-		    			{
-		    				ReloadCalendars((Element) racineNoeuds.item(i));
-		    			}
-		    			break;
-		    			
-		    			default:
-		    			{
-		    				_logger.error("Noeud de type inconnu : " + nodeType);
-		    			}
-		    		}
-		    	}
-		    }		    
-		    
-		}
-
-		catch (ParserConfigurationException | SAXException | IOException e) 
-		{
-		    e.printStackTrace();
-		}		
+		// relance les autres thread
+	
 	}
 	
 	// ---------- static function -------------

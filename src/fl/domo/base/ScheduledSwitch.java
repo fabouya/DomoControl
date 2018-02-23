@@ -51,6 +51,12 @@ public class ScheduledSwitch extends DomoScheduledObject
 	    Create(item.getAttribute("name"), item.getAttribute("calendar"), item.getAttribute("switch"));		
 	}
 	
+	@Override
+	void ReloadFromXML(Element item) 
+	{
+		// TODO Auto-generated method stub
+		
+	}
 	
     //----------------------------------------------------------	
 	
@@ -80,5 +86,6 @@ public class ScheduledSwitch extends DomoScheduledObject
 		
 		_logger.debug("Object : " + _name + " ending step");
 	}
+
 
 }

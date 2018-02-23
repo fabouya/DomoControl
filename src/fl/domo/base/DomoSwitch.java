@@ -55,6 +55,13 @@ public class DomoSwitch extends DomoObject
 	    Create(name, gpio);
 	}
 	
+	@Override
+	void ReloadFromXML(Element item) 
+	{
+		FromXML(item);
+	}
+
+	
 	//------------------------------------------------------
 	
 	public void InitSwitch()
@@ -145,5 +152,5 @@ public class DomoSwitch extends DomoObject
 	}
 	// ---------- static function -------------
 
-
+	
 }
