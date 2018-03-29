@@ -59,7 +59,7 @@ public abstract class DomoObject
 		}
 		else
 		{
-			_logger.debug("Erreur : un objet nomm√© " + name + " existe d√©j√†.");			
+			_logger.debug("Erreur : un objet nommÈ " + name + " existe dÈj‡†.");			
 		}		
 	}
 	
@@ -74,7 +74,7 @@ public abstract class DomoObject
 	{
 		DomoObject o = _ht.get(name.toLowerCase());
 		
-		_logger.debug("Recherche objet : " + name + ((null != o) ? " : trouv√©" : " : pas trouv√© !"));		
+		_logger.debug("Recherche objet : " + name + ((null != o) ? " : trouvÈ" : " : pas trouvÈ !"));		
 		
 		return o;
 	}

@@ -37,9 +37,11 @@ public class JmsServerThread extends DomoThread
 			
 			while (false == Global._quitFlag) 
 			{
-				try {
+				try 
+				{
 					Thread.sleep(50);
-				} catch (InterruptedException e) {
+				} catch (InterruptedException e) 
+				{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}	

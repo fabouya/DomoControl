@@ -229,7 +229,8 @@ public class CommandEngine
 
 			JSONObject obj = BuilJSONSuccess();
 			
-			Global._quitFlag = true;
+			// on ne stop pas tout de suite, d'abord il faut envoyer la réponse
+			Global._delayedQuitFlag = true;
 			
 			return obj;
 		}

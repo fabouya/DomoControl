@@ -108,22 +108,35 @@ public class JMSConsumer implements MessageListener
         try 
         {
         	_logger.debug("Reception message");
+        	
             TextMessage response = _session.createTextMessage();
+            response.setText("erreur dans JMSConsumer::OnMessage attente d'un message de type texte seulement");
+            
             if (message instanceof TextMessage) 
             {
                 TextMessage txtMsg = (TextMessage) message;
                 String messageText = txtMsg.getText();
                 response.setText(_messageProtocol.handleProtocolMessage(messageText));
+ 
+	            //Set the correlation ID from the received message to be the correlation id of the response message
+	            //this lets the client identify which message this is a response to if it has more than
+	            //one outstanding message to the server
+	            response.setJMSCorrelationID(message.getJMSCorrelationID());
+	 
+	            //Send the response to the Destination specified by the JMSReplyTo field of the received message,
+	            //this is presumably a temporary queue created by the client
+	            
+	            if(null != message.getJMSReplyTo())
+	            {
+	            	_replyProducer.send(message.getJMSReplyTo(), response);
+	            }
+	            
+	            if(Global._delayedQuitFlag)
+	            {
+	            	// traitement de la commande STOP
+	            	Global._quitFlag = true;
+	            }
             }
- 
-            //Set the correlation ID from the received message to be the correlation id of the response message
-            //this lets the client identify which message this is a response to if it has more than
-            //one outstanding message to the server
-            response.setJMSCorrelationID(message.getJMSCorrelationID());
- 
-            //Send the response to the Destination specified by the JMSReplyTo field of the received message,
-            //this is presumably a temporary queue created by the client
-            _replyProducer.send(message.getJMSReplyTo(), response);
         } 
         catch (JMSException e) 
         {

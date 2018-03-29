@@ -176,11 +176,21 @@ public class DomoBrain
 			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				break;
 			}
 		}
 		
 		if(Global._jmsEnabled)
+		{
 			jms.EndJMSConsumer();
+			jms.interrupt();
+		}
+		
+		if(Global._schedulerEnabled)
+		{
+			scheduler.interrupt();
+		}
+		
 		
 	}
 
